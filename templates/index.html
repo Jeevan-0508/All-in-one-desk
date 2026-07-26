@@ -1,0 +1,2520 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Personal Automation Suite</title>
+<style>
+:root{
+  --bg:#020617;
+  --card:#0f172a;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent-text:#38bdf8;
+  --accent-dedupe:#22c55e;
+  --accent-risk:#f59e0b;
+  --accent-kpi:#a855f7;
+  --accent-pdf:#ef4444;
+  --accent-sheet:#14b8a6;
+  --accent-flow:#06b6d4;
+  --accent-diff:#e879f9;
+  --accent-notes:#84cc16;
+  --accent-info:#94a3b8;
+}
+/* ================= THEMES ================= */
+body[data-theme="midnight"]{
+  --bg:#020617;
+  --card:#0f172a;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+body[data-theme="emerald"]{
+  --bg:#022c22;
+  --card:#064e3b;
+  --text:#ecfdf5;
+  --muted:#6ee7b7;
+}
+body[data-theme="aurora"]{
+  --bg:#020617;
+  --card:#1e1b4b;
+  --text:#eef2ff;
+  --muted:#a5b4fc;
+}
+body[data-theme="neon"]{
+  --bg:#020617;
+  --card:#020617;
+  --text:#e5e7eb;
+  --muted:#38bdf8;
+}
+*{
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+body{
+  margin:0;
+  background:linear-gradient(135deg,var(--bg),#020617);
+  overflow-x:hidden;
+  color:var(--text);
+}
+header{
+  padding:18px 32px;
+  font-size:22px;
+  font-weight:600;
+  border-bottom:1px solid #1e293b;
+  color:var(--accent-text);
+}
+.container{
+  display:flex;
+  flex:1;
+}
+/* ================= SIDEBAR ================= */
+.sidebar{
+  width:240px;
+  background:#020617;
+  border-right:1px solid #1e293b;
+  padding:20px;
+}
+.tab-btn{
+  width:100%;
+  background:none;
+  border:none;
+  padding:12px 14px;
+  margin-bottom:8px;
+  border-radius:10px;
+  text-align:left;
+  cursor:pointer;
+  color:var(--muted);
+  transition:background 0.2s,color 0.2s,transform 0.15s;
+}
+.tab-btn:hover{
+  transform:translateX(4px);
+}
+.tab-btn.active{
+  background:#0f172a;
+  border-left:4px solid var(--accent);
+  color:var(--accent);
+}
+/* Sidebar accent mapping */
+#text-btn.active{ --accent:var(--accent-text); }
+#dedupe-btn.active{ --accent:var(--accent-dedupe); }
+#risk-btn.active{ --accent:var(--accent-risk); }
+#kpi-btn.active{ --accent:var(--accent-kpi); }
+#pdfw-btn.active,
+#wordp-btn.active{ --accent:var(--accent-pdf); }
+#sheet-btn.active{ --accent:var(--accent-sheet); }
+#flowchart-btn.active{ --accent:var(--accent-flow); }
+#diff-btn.active{ --accent:var(--accent-diff); }
+#notes-btn.active{ --accent:var(--accent-notes); }
+#info-btn.active{ --accent:var(--accent-info); }
+/* ================= MAIN ================= */
+.main{
+  flex:1;
+  padding:30px;
+  position:relative;
+}
+/* ================= TAB SYSTEM (ANIMATION SAFE) ================= */
+/* ================= TAB SYSTEM (SAFE & STABLE) ================= */
+.tab{
+  display:none;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity 0.25s ease, transform 0.25s ease;
+}
+.tab.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* Accent per active tab */
+.tab.active{ --accent:var(--accent-text); }
+#dedupe.active{ --accent:var(--accent-dedupe); }
+#risk.active{ --accent:var(--accent-risk); }
+#kpi.active{ --accent:var(--accent-kpi); }
+#pdfw.active,
+#wordp.active{ --accent:var(--accent-pdf); }
+#sheet.active{ --accent:var(--accent-sheet); }
+#flowchart.active{ --accent:var(--accent-flow); }
+#diff.active{ --accent:var(--accent-diff); }
+#notes.active{ --accent:var(--accent-notes); }
+#info.active{ --accent:var(--accent-info); }
+/* ================= CARD ================= */
+.card{
+  background:var(--card);
+  padding:25px;
+  border-radius:16px;
+  width:100%;
+  transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tab.active .card{
+  transform:translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 8px 30px rgba(0,0,0,0.4);
+}
+.card.narrow{
+  max-width:760px;
+}
+/* ================= TEXT & INPUTS ================= */
+h2{
+  color:var(--accent);
+}
+textarea,
+input{
+  width:100%;
+  background:#020617;
+  border:1px solid #1e293b;
+  border-radius:10px;
+  color:var(--text);
+  padding:10px;
+  margin-top:10px;
+}
+textarea{
+  height:140px;
+}
+#pageContent{
+  height:calc(100vh - 260px);
+}
+/* ================= BUTTONS ================= */
+button.action{
+  margin-top:15px;
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+  color:#020617;
+  background:linear-gradient(135deg,var(--accent),#0ea5e9);
+}
+button:active{
+  transform:scale(0.97);
+}
+.mini-btn{
+  padding:6px 14px;
+  border-radius:8px;
+  border:1px solid #334155;
+  background:#020617;
+  color:var(--accent);
+  cursor:pointer;
+}
+.mini-btn.danger{
+  color:#f87171;
+  border-color:#7f1d1d;
+}
+/* ================= MISC ================= */
+.output{
+  margin-top:15px;
+  padding:12px;
+  border:1px dashed #334155;
+  border-radius:10px;
+  white-space:pre-wrap;
+}
+.dedupe-output {
+  margin-top: 16px;
+  padding: 14px 16px;
+  text-align: left;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  display: block;
+}
+.sheet-actions{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+}
+#pagesList div{
+  transition:padding-left 0.2s ease;
+}
+#pagesList div:hover{
+  padding-left:6px;
+}
+/* ================= GLASSMORPHISM ================= */
+body.glass .card{
+  background:rgba(15,23,42,0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border:1px solid rgba(255,255,255,0.08);
+}
+body.glass .sidebar{
+  background:rgba(2,6,23,0.7);
+  backdrop-filter: blur(10px);
+}
+/* ================= DRAGGABLE PANELS ================= */
+.card.draggable {
+  cursor: move;
+  position: relative;
+}
+.card.dragging {
+  opacity: 0.9;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+  z-index: 999;
+}
+/* ================= DASHBOARD ================= */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+  margin-top:20px;
+}
+.dash-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  transition:transform 0.2s ease;
+}
+.dash-card:hover{
+  transform:translateY(-4px);
+}
+.dash-card span{
+  font-size:13px;
+  color:var(--muted);
+}
+.dash-card strong{
+  font-size:28px;
+  color:var(--accent);
+}
+.usage-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+.usage-label{
+  width:120px;
+  font-size:13px;
+  color:var(--muted);
+}
+.usage-fill{
+  height:10px;
+  border-radius:6px;
+  background:linear-gradient(90deg,var(--accent),#0ea5e9);
+}
+/* ================= BUBBLE GAME ================= */
+.bubble {
+  position:absolute;
+  border-radius:50%;
+  cursor:pointer;
+  animation: bubbleFloat linear;
+}
+@keyframes bubbleFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-500px); }
+}
+/* ================= FOCUS CLICK GAME ================= */
+#focusDot{
+  width:30px;
+  height:30px;
+  background:#38bdf8;
+  border-radius:50%;
+  position:absolute;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+.card.narrow{
+  max-width:760px;
+  margin: 0 auto;   /* 👈 THIS fixes everything */
+}
+/* Keep narrow cards nicely positioned */
+.tab .card.narrow{
+  margin: 40px auto 0 auto; /* top spacing */
+}
+/* ================= APP LAYOUT ================= */
+/* ================= APP LAYOUT ================= */
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+/* sidebar + main */
+.container{
+  flex:1;
+  display:flex;
+}
+
+/* ================= FOOTER ================= */
+.app-footer{
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  color:#64748b;
+  border-top:1px solid #1e293b;
+  background:transparent;
+}
+.app-footer{
+  opacity:0.85;
+}
+.app-footer:hover{
+  opacity:1;
+}
+</style>
+<script>
+function switchTab(id){
+  // store active tab
+  localStorage.setItem("activeTab", id);
+  document.querySelectorAll(".tab")
+    .forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn")
+    .forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.getElementById(id + "-btn").classList.add("active");
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const savedTab = localStorage.getItem("activeTab") || "text";
+  switchTab(savedTab);
+});
+</script>
+<!-- Mermaid library -->
+<!-- Mermaid -->
+<script src="/static/js/mermaid.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: "dark",
+    flowchart: {
+      useMaxWidth: false
+    }
+  });
+</script>
+</head>
+<body>
+ 
+ 
+<header style="
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 32px;
+  border-bottom:1px solid #1e293b;
+  background:#020617;
+">
+  <div style="padding:8px 32px;border-bottom:1px solid #1e293b;background:#020617">
+  <input
+    id="globalSearch"
+    placeholder="Search notes, risks, flowcharts..."
+    oninput="runGlobalSearch()"
+    style="max-width:420px"
+  />
+</div>
+  <!-- LEFT: APP TITLE -->
+  <div style="font-size:22px;font-weight:600;color:var(--accent-text)">
+    ⚙️ Personal Automation Suite
+  </div>
+  <!-- RIGHT: CONTROLS -->
+  <div style="display:flex;align-items:center;gap:14px">
+    <label style="font-size:13px;color:#94a3b8">Theme</label>
+    <select id="themeSelect" onchange="setTheme(this.value)">
+      <option value="midnight">Midnight</option>
+      <option value="emerald">Emerald</option>
+      <option value="aurora">Aurora</option>
+      <option value="neon">Neon</option>
+    </select>
+    <label style="font-size:13px;color:#94a3b8;display:flex;align-items:center;gap:6px">
+      <input type="checkbox" id="glassToggle" onchange="toggleGlass()" />
+      Glass
+    </label>
+  </div>
+</header>
+<div class="container">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <button id="info-btn" class="tab-btn" onclick="switchTab('info')">Info and Purpose</button>
+    <button id="text-btn" class="tab-btn active" onclick="switchTab('text')">Text Formatter</button>
+    <button id="dedupe-btn" class="tab-btn" onclick="switchTab('dedupe')">Remove Duplicates</button>
+    <button id="risk-btn" class="tab-btn" onclick="switchTab('risk')">Risk Notes</button>
+    <button id="kpi-btn" class="tab-btn" onclick="switchTab('kpi')">KPI Calculator</button>
+    <button id="pdfw-btn" class="tab-btn" onclick="switchTab('pdfw')">PDF → Word</button>
+    <button id="wordp-btn" class="tab-btn" onclick="switchTab('wordp')">Word → PDF</button>
+    <button id="sheet-btn" class="tab-btn" onclick="switchTab('sheet')">Excel / CSV → TXT</button>
+    <button id="flowchart-btn" class="tab-btn" onclick="switchTab('flowchart')">Flowchart Generator</button>
+    <button id="diff-btn" class="tab-btn" onclick="switchTab('diff')">Text Diff</button>
+    <button id="email-btn" class="tab-btn" onclick="switchTab('email')">📧 Email Generator</button>
+    <button id="notes-btn" class="tab-btn" onclick="switchTab('notes')"> Notes</button>
+    <button id="dashboard-btn" class="tab-btn" onclick="switchTab('dashboard')">Dashboard</button>
+    <button id="image_to_text-btn" class="tab-btn"onclick="switchTab('image_to_text')">Image → Text</button>
+    <button id="break-btn" class="tab-btn" onclick="switchTab('break')">🫧 Take a Break</button>
+    <button id="knowledge-btn" class="tab-btn" onclick="switchTab('knowledge')">🧠 Knowledge Assistant</button>
+
+  </div>
+  <div class="main">
+<!-- TEXT FORMATTER -->
+<div id="text" class="tab active">
+  <div class="card">
+    <h2>Text Formatter</h2>
+    <textarea id="text-input" placeholder="Paste values..."></textarea>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="mini-btn" onclick="formatOR()">OR =</button>
+      <button class="mini-btn" onclick="formatIN()">IN ()</button>
+      <button class="mini-btn danger" onclick="resetText()">Reset</button>
+    </div>
+    <button class="action" onclick="formatDefault()">Format</button>
+    <div id="text-output" class="output" style="display:none"></div>
+    <button id="copy-btn" class="mini-btn" style="display:none" onclick="copyText()">Copy</button>
+  </div>
+</div>
+
+<!-- ================= ASSISTANT ================= -->
+<div id="assistant" class="tab">
+  <div class="card narrow">
+    <h2>🧠 Assistant</h2>
+
+    <p style="color:var(--muted)">
+      You can talk freely here — work thoughts, risks, or just how you feel.
+    </p>
+
+    <div id="assistantChat"
+         style="margin-top:15px;max-height:360px;overflow-y:auto">
+    </div>
+
+    <textarea id="assistantInput"
+      placeholder="Type here..."
+      style="margin-top:12px;height:90px"></textarea>
+
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="action" onclick="sendAssistant()">
+        Send
+      </button>
+      <button class="mini-btn danger" onclick="resetAssistant()">
+        Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- REMOVE DUPES -->
+<div id="dedupe" class="tab">
+  <div class="card">
+    <h2>Remove Duplicates</h2>
+
+    <form method="POST" action="/dedupe" onsubmit="trackUsage('dedupe')">
+      <textarea
+        id="dedupe-input"
+        name="data"
+        placeholder="Paste values here..."
+      ></textarea>
+
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="action">Clean</button>
+
+        <button
+          type="button"
+          class="mini-btn"
+          onclick="copyDedupe()"
+        >
+          Copy
+        </button>
+
+        <button
+          type="button"
+          class="mini-btn danger"
+          onclick="resetDedupe()"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+
+    {% if dedupe_output %}
+      <div
+        id="dedupe-output"
+        class="output dedupe-output"
+      >
+{{ dedupe_output }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- RISK REGISTER -->
+<div id="risk" class="tab">
+  <div class="card">
+    <h2>📋 Risk Register</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <input id="rTitle" placeholder="Title">
+      <input id="rRegion" placeholder="Region">
+      <input id="rSeverity" placeholder="Severity">
+      <input id="rStatus" placeholder="Status">
+    </div>
+
+    <textarea id="rDesc" placeholder="Description"></textarea>
+    <textarea id="rImpact" placeholder="Impact"></textarea>
+    <textarea id="rMitigation" placeholder="Mitigation"></textarea>
+
+    <button class="action" onclick="addRisk()">Add Risk</button>
+
+    <hr style="margin:20px 0">
+
+    <h3>Risk Entries</h3>
+    <table id="riskTable" style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Region</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="mini-btn" onclick="exportRisks()">Export XLS</button>
+      <button class="mini-btn danger" onclick="clearRisks()">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI -->
+<div id="kpi" class="tab">
+  <div class="card">
+    <h2>KPI Calculator</h2>
+
+    <form onsubmit="calculateKPI(event)">
+      <input id="kpi-total" placeholder="Total Volume" type="number" min="0" required>
+      <input id="kpi-defects" placeholder="Defects" type="number" min="0" required>
+      <input id="kpi-fp" placeholder="False Positives" type="number" min="0" required>
+
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="action">Calculate</button>
+        <button type="button" class="mini-btn" onclick="copyKPI()">Copy</button>
+        <button type="button" class="mini-btn danger" onclick="resetKPI()">Reset</button>
+      </div>
+    </form>
+
+    <div id="kpi-output" class="output" style="margin-top:18px;display:none"></div>
+  </div>
+</div>
+
+<!-- PDF -->
+<div id="pdfw" class="tab">
+  <div class="card">
+    <h2>PDF → Word</h2>
+
+    <form id="pdfWordForm">
+      <input type="file" name="file" accept=".pdf" required>
+      <button class="action">Convert</button>
+    </form>
+
+    <div id="pdfWordResult" class="output" style="display:none"></div>
+  </div>
+</div>
+
+
+<!-- WORD -->
+<div id="wordp" class="tab">
+  <div class="card">
+    <h2>Word → PDF</h2>
+
+    <form id="wordPdfForm">
+      <input type="file" name="file" accept=".docx" required>
+      <button class="action">Convert</button>
+    </form>
+
+    <div id="wordPdfResult" class="output" style="display:none"></div>
+  </div>
+</div>
+
+
+<!-- EXCEL / CSV -->
+<div id="sheet" class="tab">
+  <div class="card">
+    <h2>Excel / CSV → TXT</h2>
+    <form onsubmit="convertSheet(event)" enctype="multipart/form-data">
+
+      <input type="file" name="file" accept=".xlsx,.xls,.csv" required>
+      <button class="action">Convert</button>
+    </form>
+    
+<div class="sheet-actions">
+  <button type="button" class="mini-btn" onclick="copySheet()">Copy</button>
+  <button type="button" class="mini-btn" onclick="downloadSheet()">Download TXT</button>
+  <button type="button" class="mini-btn danger" onclick="resetSheet()">Reset</button>
+</div>
+<div id="sheet-output" class="output"> Your output appears here </div>
+  </div>
+</div>
+<!-- INFO -->
+<div id="info" class="tab">
+  <div class="card">
+    <h2>About This Application</h2>
+    <p>
+      <strong>Personal Automation Suite</strong> is an internal, offline-first
+      productivity and risk-support tool designed to assist
+      <b>Risk, Compliance, and Control teams</b> in structured decision-making,
+      documentation, and analysis.
+    </p>
+    <p>
+      This application consolidates commonly used internal utilities
+      (formatting, analysis, flow visualization, and structured notes)
+      into a single, secure workspace to improve
+      <b>operational efficiency and consistency</b>.
+    </p>
+    <hr>
+    <h3>Data Confidentiality & Security</h3>
+    <p>
+      Data confidentiality is a <b>non-negotiable principle</b> within Amazon
+      and RCMT operations.
+      This tool is intentionally designed to operate in a
+      <b>fully local, offline environment</b>.
+    </p>
+    <ul>
+      <li>1.No data transmission</li>
+      <li>2.No external APIs</li>
+      <li>3.No cloud storage</li>
+      <li>4.No logging or telemetry</li>
+    </ul>
+    <p>
+      All inputs, notes, files, and generated outputs remain
+      <b>entirely on the user’s local machine</b>.
+      Once the application is closed, no data is retained outside
+      local browser or application storage.
+    </p>
+    <hr>
+    <h3>⚠️ Risk & Compliance Alignment</h3>
+    <p>
+      The tool is aligned with the core RCMT philosophy:
+    </p>
+    <ul>
+      <li>🛡️ Risk Identification</li>
+      <li>📊 Risk Assessment & Analysis</li>
+      <li>🔎 Risk Detection & Monitoring</li>
+      <li>🧰 Risk Mitigation Documentation</li>
+    </ul>
+    <p>
+      Features such as the <b>Flowchart Generator</b> and
+      <b>Structured Notes</b> are intended to support
+      <b>clear audit trails, logical decision paths, and repeatable processes</b>.
+    </p>
+    <hr>
+   
+    <h3>🏗️ Design Philosophy</h3>
+    <p>
+      The application follows three guiding principles:
+    </p>
+    <ol>
+      <li><b>Simplicity</b> — minimal UI, focused workflows</li>
+      <li><b>Safety</b> — zero external dependencies</li>
+      <li><b>Control</b> — user-owned data and outputs</li>
+    </ol>
+    <hr>
+    <p>
+      <b>Built by:</b> Jeekumak<br>
+      <b>Team:</b> RCMT<br>
+      <b>Focus:</b> Risk, Compliance, Automation
+    </p>
+  </div>
+</div>
+<!-------flow chart-->
+<div id="flowchart" class="tab">
+  <div class="card">
+    <h2>Flowchart Generator (Mermaid)</h2>
+   <!-- Templates -->
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+  <select id="flowTemplate" class="mini-btn">
+  <option value="">Select Template</option>
+  <option value="risk">Risk Workflow</option>
+  <option value="sop">SOP Process</option>
+  <option value="rca">Root Cause Analysis</option>
+  <option value="approval">Approval Flow</option>
+  <option value="swimlane">Swimlane (Roles)</option>
+</select>
+  <button class="mini-btn" onclick="loadTemplate()">Load Example</button>
+</div>
+    <textarea id="flowInput" rows="8" placeholder="Paste Mermaid code here...">graph TD
+A[ROC] --> B[RCMT]
+B --> C{Risk?}
+C -->|Yes| D[Mitigation]
+C -->|No| E[Close Case]
+</textarea>
+    <br><br>
+    <button class="action" onclick="renderFlowchart()">Render Flowchart</button>
+    <button class="mini-btn danger" onclick="resetFlowchart()">Reset</button>
+    <div id="flowchartOutput" class="mermaid" style="margin-top:20px;"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="mini-btn" onclick="downloadSVG()">SVG</button>
+      <button class="mini-btn" onclick="downloadPNG(false)">PNG</button>
+      <button class="mini-btn" onclick="downloadPNG(true)">PNG (Transparent)</button>
+      <button class="mini-btn" onclick="downloadJPG()">JPG</button>
+      <button class="mini-btn" onclick="downloadPDF()">PDF</button>
+    </div>
+  </div>
+</div>
+<!--text difference-->
+<div id="diff" class="tab">
+  <div class="card">
+    <h2>Text Diff / Compare</h2>
+    <label>Before</label>
+    <textarea id="diffOld" placeholder="Paste original text..."></textarea>
+    <label style="margin-top:10px">After</label>
+    <textarea id="diffNew" placeholder="Paste updated text..."></textarea>
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="action" onclick="compareText()">Compare</button>
+      <button class="mini-btn danger" onclick="resetDiff()">Reset</button>
+    </div>
+    <div id="diffOutput" class="output" style="margin-top:15px"></div>
+  </div>
+</div>
+<!---notes tab---------------------------------------------------------------------------------------------------------------------------------->
+<div id="notes" class="tab">
+  <div class="card">
+    <!-- SECTION TABS -->
+    <div id="sectionTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+<div style="display:flex;gap:10px;margin-bottom:10px">
+  <button class="mini-btn" onclick="addSection()">+ New Section</button>
+  <button class="mini-btn" onclick="renameSection()">Rename Section</button>
+  <button class="mini-btn danger" onclick="deleteSection()">Delete Section</button>
+</div>
+    <hr style="margin:12px 0;border-color:#1e293b">
+    <div style="display:flex;gap:12px">
+      <!-- PAGES COLUMN -->
+      <div style="width:220px;border-right:1px solid #1e293b;padding-right:10px">
+        <h4>Pages</h4>
+        <div id="pagesList"></div>
+        <button class="mini-btn" onclick="addPage()">+ New Page</button>
+      </div>
+      <!-- NOTES AREA -->
+      <div style="flex:1">
+        <input id="pageTitle" placeholder="Page title" disabled />
+        <textarea id="pageContent"
+          style="height:300px"
+          placeholder="Write notes here..."
+          oninput="savePage()"></textarea>
+        <div style="margin-top:10px;display:flex;gap:10px">
+           <button class="mini-btn" onclick="renamePage()">Rename</button>
+           <button class="mini-btn danger" onclick="deletePage()">Delete</button>
+            <button class="mini-btn" onclick="exportPage()">Export Page TXT</button>
+            <button class="mini-btn" onclick="exportSection()">Export Section TXT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!------dashboard Tab-------------------------------------------------------------------------------------------------------->
+<div id="dashboard" class="tab">
+  <div class="card">
+    <h2>📊 Dashboard</h2>
+
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <span>Notes Pages</span>
+        <strong id="statNotes">0</strong>
+      </div>
+      <div class="dash-card">
+        <span>Flowcharts Created</span>
+        <strong id="statFlows">0</strong>
+      </div>
+      <div class="dash-card">
+        <span>Risk Entries</span>
+        <strong id="statRisk">0</strong>
+      </div>
+      <div class="dash-card">
+        <span>Image OCR Used</span>
+        <strong id="statOCR">0</strong>
+      </div>
+    </div>
+
+    <h3 style="margin-top:30px">Feature Usage</h3>
+    <div id="usageGraph"></div>
+  </div>
+</div>
+
+<!-- ================= TAKE A BREAK ================= -->
+<div id="break" class="tab">
+  <div class="card">
+    <h2>🧘 Take a Break</h2>
+    <p style="color:var(--muted)">
+      Choose a short activity to reset your mind.
+      Each takes less than a minute.
+    </p>
+    <!-- ================= GAME MENU ================= -->
+    <div id="breakMenu" class="dashboard-grid" style="margin-top:20px">
+      <div class="dash-card" onclick="openGame('bubble')">
+        <span>🫧 Bubble Break</span>
+        <strong>Pop & Relax</strong>
+        <span style="font-size:12px">
+          Release stress with simple clicks
+        </span>
+      </div>
+      <div class="dash-card" onclick="openGame('focus')">
+        <span>🎯 Focus Click</span>
+        <strong>Reset Focus</strong>
+        <span style="font-size:12px">
+          Sharpen attention & clear noise
+        </span>
+      </div>
+    </div>
+    <!-- ================= BUBBLE GAME ================= -->
+    <div id="bubbleGameWrapper" style="display:none;margin-top:20px">
+      
+      <button class="mini-btn danger"
+        onclick="resetBreakGames()"
+        style="margin-bottom:12px">
+  ⬅ Back to Games
+</button>
+      <h2>🫧 Bubble Break (1 Minute)</h2>
+      <p style="color:var(--muted);font-size:14px">
+        Click bubbles to relax your mind. Auto-ends in 60 seconds.
+      </p>
+      <div id="bubbleGame" style="
+        position:relative;
+        height:420px;
+        background:#020617;
+        border:1px solid #1e293b;
+        border-radius:12px;
+        overflow:hidden;
+        margin-top:15px;
+      ">
+        <!-- SCORE -->
+        <div style="
+          position:absolute;
+          top:10px;
+          left:12px;
+          font-size:13px;
+          color:#94a3b8">
+          Score: <span id="bubbleScore">0</span>
+          &nbsp;|&nbsp;
+          High Score: <span id="bubbleHigh">0</span>
+        </div>
+        <!-- TIMER -->
+        <div style="
+          position:absolute;
+          top:10px;
+          right:12px;
+          font-size:13px;
+          color:#94a3b8">
+          Time: <span id="bubbleTime">60</span>s
+        </div>
+      </div>
+      <!-- ================= REWARD OVERLAY ================= -->
+      <div id="bubbleReward" style="
+        display:none;
+        position:absolute;
+        inset:0;
+        background:rgba(2,6,23,0.85);
+        backdrop-filter:blur(6px);
+        align-items:center;
+        justify-content:center;
+        z-index:10;
+      ">
+        <div style="
+          background:var(--card);
+          padding:30px;
+          border-radius:16px;
+          text-align:center;
+          max-width:360px;
+          box-shadow:0 20px 60px rgba(0,0,0,0.6);
+        ">
+          <h2 style="margin-top:0;color:var(--accent-text)">
+            🎉 You’re Awesome!
+          </h2>
+          <p id="rewardText" style="margin:15px 0;color:var(--text)"></p>
+          <button class="action" onclick="closeReward()">
+            Back to Work 🚀
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ================= FOCUS GAME ================= -->
+    <div id="focusGameWrapper" style="display:none;margin-top:20px">
+      <button class="mini-btn danger"
+        onclick="resetBreakGames()"
+        style="margin-bottom:12px">
+  ⬅ Back to Games
+</button>
+      <h3>🎯 Focus Click</h3>
+      <p style="color:var(--muted);font-size:13px">
+        Click the dot as it appears. No rush.
+      </p>
+      <div id="focusArea" style="
+        position:relative;
+        height:360px;
+        background:#020617;
+        border:1px solid #1e293b;
+        border-radius:12px;
+      ">
+        <div id="focusDot"></div>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--muted)">
+        Clicks: <span id="focusScore">0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE TO TEXT -->
+<!-- Image to text -->
+<div id="image_to_text" class="tab">
+  <div class="card narrow">
+
+    <h2>Image → Text</h2>
+
+    <form id="ocrForm" action="/image_to_text" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" required>
+
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="action" type="submit">Convert</button>
+        <button type="button" class="mini-btn danger" onclick="resetOCR()">Reset</button>
+        <button type="button" class="mini-btn" onclick="trackUsage('image_to_text'); copyOCR()"> Copy</button>
+      </div>
+      
+    </form>
+
+    <pre id="ocrOutput" class="output-box">
+{{ ocr_output if ocr_output else "" }}
+    </pre>
+
+  </div>
+</div>
+
+
+  <!-- ================= EMAIL GENERATOR ================= -->
+  <div id="email" class="tab">
+    <div class="card narrow">
+      <h2>📧 Professional Email Generator</h2>
+      <p style="color:var(--muted);margin-bottom:18px">
+        Write clear, polite, and professional emails in seconds.
+        Just fill the details — we’ll take care of the wording.
+      </p>
+      <label>Email type</label>
+      <select id="emailType" onchange="renderEmailForm()" class="mini-btn">
+        <option value="">Select…</option>
+        <option value="ooo">Out of Office (OOO)</option>
+        <option value="escalation">Escalation</option>
+        <option value="followup">Follow-up</option>
+      </select>
+      <div id="emailForm" style="margin-top:18px"></div>
+      <button class="action" style="margin-top:20px" onclick="generateEmail()">
+        Generate Email
+      </button>
+      <div id="emailOutput"
+           class="output"
+           style="display:none;margin-top:20px"></div>
+      <button id="copyEmailBtn"
+              class="mini-btn"
+              style="display:none;margin-top:10px"
+              onclick="copyEmail()">
+        Copy Email
+      </button>
+    </div>
+  </div>
+
+<!-- ================= KNOWLEDGE ASSISTANT ================= -->
+<div id="knowledge" class="tab">
+  <div class="card narrow">
+    <h2>🧠 Knowledge Assistant</h2>
+    <!-- Knowledge Selector -->
+<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+
+  <select id="knowledgeFramework" class="mini-btn">
+    <option value="risk_framework">Risk Framework</option>
+  </select>
+
+  <select id="knowledgeChapter" class="mini-btn">
+    <option value="">Select Chapter</option>
+    <option value="01_introduction.md">01 – Introduction</option>
+    <option value="02_what_is_risk.md">02 – What is Risk</option>
+    <option value="03_objectives_of_risk_management.md">
+      03 – Objectives of Risk Management
+    </option>
+    <option value="04_risk_principles.md">04 – Risk Principles</option>
+    <!-- continue till 36 -->
+  </select>
+
+</div>
+
+
+    <p style="color:var(--muted);font-size:14px">
+      Ask about risk, ISO standards, cybersecurity, program management,
+      or describe a scenario to identify risks.
+    </p>
+
+    <textarea
+      id="knowledgeInput"
+      placeholder="Example:
+What is risk?
+Explain ISO 27001
+A carrier flips SCAC after tender acceptance"
+      style="height:140px"
+    ></textarea>
+
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="action" onclick="loadSelectedChapter()">Ask</button>
+      <button class="mini-btn danger" onclick="resetKnowledge()">Reset</button>
+    </div>
+
+    <div
+      id="knowledgeOutput"
+      class="output"
+      style="margin-top:16px;display:none"
+    ></div>
+  </div>
+</div>
+
+
+</div> <!-- ✅ END .main -->
+<script>
+function vals(){return document.getElementById("text-input").value.trim().split(/\s+/).filter(Boolean)}
+function show(t){const o=document.getElementById("text-output");o.style.display="block";o.innerText=t;document.getElementById("copy-btn").style.display="inline-block"}
+function formatDefault(){
+  trackUsage("text_formatter");   // 👈 ADD THIS
+  const v = vals();
+  if(v.length) show(v.map(x=>`'${x}'`).join(", "));
+}
+function formatOR(){const v=vals();if(v.length)show(v.map(x=>`OR scac = '${x}'`).join("\n"))}
+function formatIN(){const v=vals();if(v.length)show(`IN (${v.map(x=>`'${x}'`).join(", ")})`)}
+function copyText(){navigator.clipboard.writeText(document.getElementById("text-output").innerText)}
+function resetText(){document.getElementById("text-input").value="";document.getElementById("text-output").style.display="none";document.getElementById("copy-btn").style.display="none"}
+function copySheet(){navigator.clipboard.writeText(document.getElementById("sheet-output").innerText)}
+function resetSheet(){document.getElementById("sheet-output").innerText=""}
+</script>
+<script>
+function downloadSheet() {
+  const text = document.getElementById("sheet-output").innerText;
+  if (!text.trim()) {
+    alert("Nothing to download");
+    return;
+  }
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "converted.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</script>
+<!---mermaid script-->
+<script>
+let flowRendered = false;
+/* ---------- RENDER FLOWCHART (FIXED) ---------- */
+async function renderFlowchart() { trackUsage("flowchart");   
+  const code = document.getElementById("flowInput").value.trim();
+  const output = document.getElementById("flowchartOutput");
+  if (!code) {
+    alert("Enter Mermaid code first");
+    return;
+  }
+  output.innerHTML = "";
+  flowRendered = false;
+  try {
+    const { svg } = await mermaid.render(
+      "mermaid-svg-" + Date.now(),
+      code
+    );
+    output.innerHTML = svg;
+    flowRendered = true;
+  } catch (err) {
+    console.error(err);
+    alert("Invalid Mermaid syntax");
+  }
+}
+/* ---------- SAFETY ---------- */
+function getSVG() {
+  if (!flowRendered) {
+    alert("Render the flowchart first");
+    return null;
+  }
+  return document.querySelector("#flowchartOutput svg");
+}
+/* ---------- SVG ---------- */
+function downloadSVG() {
+  const svg = getSVG();
+  if (!svg) return;
+  const clone = svg.cloneNode(true);
+  const bbox = svg.getBBox();
+  const pad = 40;
+  clone.setAttribute("width", bbox.width + pad * 2);
+  clone.setAttribute("height", bbox.height + pad * 2);
+  clone.setAttribute(
+    "viewBox",
+    `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`
+  );
+  const blob = new Blob(
+    [new XMLSerializer().serializeToString(clone)],
+    { type: "image/svg+xml" }
+  );
+  triggerDownload(blob, "flowchart.svg");
+}
+/* ---------- PNG / JPG ---------- */
+function exportRaster(type, transparent) {
+  const svg = getSVG();
+  if (!svg) return;
+  const bbox = svg.getBBox();
+  const pad = 40;
+  const scale = 2;
+  const clone = svg.cloneNode(true);
+  clone.setAttribute(
+    "viewBox",
+    `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`
+  );
+  const data = new XMLSerializer().serializeToString(clone);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = (bbox.width + pad * 2) * scale;
+    canvas.height = (bbox.height + pad * 2) * scale;
+    const ctx = canvas.getContext("2d");
+    if (!transparent) {
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.scale(scale, scale);
+    ctx.drawImage(img, 0, 0);
+    canvas.toBlob(blob => {
+      triggerDownload(blob, `flowchart.${type}`);
+    }, `image/${type}`);
+  };
+  img.src =
+    "data:image/svg+xml;base64," +
+    btoa(unescape(encodeURIComponent(data)));
+}
+function downloadPNG(t) { exportRaster("png", t); }
+function downloadJPG() { exportRaster("jpeg", false); }
+/* ---------- PDF (SAFE METHOD) ---------- */
+function downloadPDF() {
+  const svg = getSVG();
+  if (!svg) return;
+  const bbox = svg.getBBox();
+  const pad = 40;
+  const scale = 2;
+  const canvas = document.createElement("canvas");
+  canvas.width = (bbox.width + pad * 2) * scale;
+  canvas.height = (bbox.height + pad * 2) * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#020617";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(scale, scale);
+  const clone = svg.cloneNode(true);
+  clone.setAttribute(
+    "viewBox",
+    `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`
+  );
+  const data = new XMLSerializer().serializeToString(clone);
+  const img = new Image();
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0);
+    const pdf = new jspdf.jsPDF({
+      orientation: canvas.width > canvas.height ? "landscape" : "portrait",
+      unit: "px",
+      format: [canvas.width, canvas.height]
+    });
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0);
+    pdf.save("flowchart.pdf");
+  };
+  img.src =
+    "data:image/svg+xml;base64," +
+    btoa(unescape(encodeURIComponent(data)));
+}
+/* ---------- DOWNLOAD ---------- */
+function triggerDownload(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+<script>
+function resetFlowchart() {
+  // Clear textarea
+  document.getElementById("flowInput").value = "";
+  // Clear rendered diagram
+  document.getElementById("flowchartOutput").innerHTML = "";
+  // Reset render flag
+  flowRendered = false;
+}
+const FLOW_TEMPLATES = {
+  risk: `flowchart TD
+    A[ROC] --> B[RCMT Review]
+    B --> C{Risk Identified?}
+    C -->|No| D[Close Case]
+    C -->|Yes| E[Risk Classification]
+    E --> F[Risk Mitigation]
+    E --> G[Risk Detection]
+    F --> H[Owner: Saad]
+    G --> I[Owner: Jeevan]
+    H --> J[Resolved]
+    I --> J
+  `,
+  sop: `flowchart TD
+    A[Start] --> B[Receive Request]
+    B --> C[Validate Details]
+    C --> D{Approved?}
+    D -->|Yes| E[Execute Task]
+    D -->|No| F[Reject Request]
+    E --> G[Close]
+    F --> G
+  `,
+  rca: `flowchart TD
+    A[Incident Occurs] --> B[Identify Issue]
+    B --> C[Analyze Root Cause]
+    C --> D{Cause Found?}
+    D -->|Yes| E[Apply Fix]
+    D -->|No| C
+    E --> F[Preventive Action]
+    F --> G[Close RCA]
+  `,
+  approval: `flowchart TD
+    A[Request Raised] --> B[Manager Review]
+    B --> C{Approved?}
+    C -->|Yes| D[Finance Approval]
+    C -->|No| E[Reject]
+    D --> F[Execute]
+    F --> G[Complete]
+  `,
+    swimlane: `flowchart LR
+    subgraph ROC
+      A[Initiate Risk]
+    end
+    subgraph RCMT
+      B[Review Risk]
+      C{Risk Valid?}
+    end
+    subgraph Mitigation
+      D[Apply Controls]
+    end
+    subgraph Detection
+      E[Monitor Activity]
+    end
+    A --> B
+    B --> C
+    C -->|Yes| D
+    C -->|Yes| E
+    C -->|No| F[Close Case]
+  `
+};
+function loadTemplate() {
+  const key = document.getElementById("flowTemplate").value;
+  if (!key) {
+    alert("Select a template first");
+    return;
+  }
+  document.getElementById("flowInput").value = FLOW_TEMPLATES[key];
+  document.getElementById("flowchartOutput").innerHTML = "";
+  flowRendered = false;
+}
+</script>
+<!-----script for text diff-->
+<script>
+function compareText() {
+  const oldText = document.getElementById("diffOld").value.split("\n");
+  const newText = document.getElementById("diffNew").value.split("\n");
+  const output = document.getElementById("diffOutput");
+  let html = "";
+  newText.forEach(line => {
+    if (!oldText.includes(line)) {
+      html += `<div style="color:#22c55e">+ ${line}</div>`;
+    } else {
+      html += `<div>${line}</div>`;
+    }
+  });
+  oldText.forEach(line => {
+    if (!newText.includes(line)) {
+      html += `<div style="color:#ef4444">- ${line}</div>`;
+    }
+  });
+  output.innerHTML = html || "No differences found";
+}
+function resetDiff() {
+  document.getElementById("diffOld").value = "";
+  document.getElementById("diffNew").value = "";
+  document.getElementById("diffOutput").innerHTML = "";
+}
+</script>
+<!----notes tab script------------------------------------------------------------------------------------------------------------------------------>
+<script>
+const NOTES_KEY = "advanced_notes_app";
+let notesData = JSON.parse(localStorage.getItem(NOTES_KEY)) || {};
+let currentSection = null;
+let currentPage = null;
+/* ---------- INIT ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  if (Object.keys(notesData).length === 0) {
+    notesData["General"] = {};
+  }
+  currentSection = Object.keys(notesData)[0];
+  renderSections();
+  renderPages();
+});
+/* ---------- SAVE ---------- */
+function persist() {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notesData));
+}
+/* ---------- SECTIONS ---------- */
+function renderSections() {
+  const tabs = document.getElementById("sectionTabs");
+  tabs.innerHTML = "";
+  Object.keys(notesData).forEach(section => {
+    const btn = document.createElement("button");
+    btn.className = "mini-btn";
+    btn.textContent = section;
+    if (section === currentSection) btn.style.borderColor = "#38bdf8";
+    btn.onclick = () => {
+      currentSection = section;
+      currentPage = null;
+      renderSections();
+      renderPages();
+      clearEditor();
+    };
+    tabs.appendChild(btn);
+  });
+}
+function addSection() {
+  const name = prompt("Section name?");
+  if (!name || notesData[name]) return;
+  notesData[name] = {};
+  currentSection = name;
+  persist();
+  renderSections();
+  renderPages();
+}
+/* ---------- PAGES ---------- */
+function renderPages() {
+  const list = document.getElementById("pagesList");
+  list.innerHTML = "";
+  const pages = notesData[currentSection];
+  Object.keys(pages).forEach(page => {
+    if (pages[page].hidden) return;
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.justifyContent = "space-between";
+    row.style.cursor = "pointer";
+    row.style.marginBottom = "6px";
+    const name = document.createElement("span");
+    name.textContent = page;
+    name.onclick = () => openPage(page);
+    row.appendChild(name);
+    list.appendChild(row);
+  });
+}
+function addPage() {trackUsage("notes");
+  const name = prompt("Page name?");
+  if (!name || notesData[currentSection][name]) return;
+  notesData[currentSection][name] = { content: "", hidden: false };
+  currentPage = name;
+  persist();
+  renderPages();
+  openPage(name);
+}
+function openPage(page) {
+  currentPage = page;
+  document.getElementById("pageTitle").value = page;
+  document.getElementById("pageContent").value =
+    notesData[currentSection][page].content;
+}
+/* ---------- SAVE CONTENT ---------- */
+function savePage() {
+  if (!currentPage) return;
+  notesData[currentSection][currentPage].content =
+    document.getElementById("pageContent").value;
+  persist();
+}
+/* ---------- RENAME ---------- */
+function renamePage() {
+  if (!currentPage) return;
+  const newName = prompt("New page name?", currentPage);
+  if (!newName || newName === currentPage) return;
+  const data = notesData[currentSection][currentPage];
+  delete notesData[currentSection][currentPage];
+  notesData[currentSection][newName] = data;
+  currentPage = newName;
+  persist();
+  renderPages();
+  openPage(newName);
+}
+/* ---------- DELETE ---------- */
+function deletePage() {
+  if (!currentPage) return;
+  if (!confirm("Delete this page?")) return;
+  delete notesData[currentSection][currentPage];
+  currentPage = null;
+  persist();
+  renderPages();
+  clearEditor();
+}
+/* ---------- UTIL ---------- */
+function clearEditor() {
+  document.getElementById("pageTitle").value = "";
+  document.getElementById("pageContent").value = "";
+}
+/* ---------- RENAME SECTION ---------- */
+function renameSection() {
+  if (!currentSection) return;
+  const newName = prompt("New section name?", currentSection);
+  if (!newName || newName === currentSection) return;
+  if (notesData[newName]) {
+    alert("A section with this name already exists");
+    return;
+  }
+  notesData[newName] = notesData[currentSection];
+  delete notesData[currentSection];
+  currentSection = newName;
+  persist();
+  renderSections();
+  renderPages();
+}
+/* ---------- DELETE SECTION ---------- */
+function deleteSection() {
+  if (!currentSection) return;
+  const sectionCount = Object.keys(notesData).length;
+  if (sectionCount === 1) {
+    alert("At least one section must exist");
+    return;
+  }
+  const pageCount = Object.keys(notesData[currentSection]).length;
+  const msg =
+    pageCount > 0
+      ? `Delete section "${currentSection}" and all ${pageCount} pages?`
+      : `Delete section "${currentSection}"?`;
+  if (!confirm(msg)) return;
+  delete notesData[currentSection];
+  currentSection = Object.keys(notesData)[0];
+  currentPage = null;
+  persist();
+  renderSections();
+  renderPages();
+  clearEditor();
+}
+</script>
+<script>
+function runGlobalSearch(){
+  const q = document.getElementById("globalSearch").value.toLowerCase().trim();
+  if (!q) return;
+  /* ---- SEARCH NOTES ---- */
+  for (const section in notesData){
+    for (const page in notesData[section]){
+      const content = notesData[section][page].content.toLowerCase();
+      if (content.includes(q)){
+        switchTab("notes");
+        currentSection = section;
+        renderSections();
+        renderPages();
+        openPage(page);
+        return;
+      }
+    }
+  }
+  /* ---- SEARCH FLOWCHART ---- */
+  const flow = document.getElementById("flowInput");
+  if (flow && flow.value.toLowerCase().includes(q)){
+    switchTab("flowchart");
+    flow.focus();
+    return;
+  }
+  /* ---- SEARCH RISK NOTES ---- */
+  const risk = document.querySelector("#risk textarea");
+  if (risk && risk.value.toLowerCase().includes(q)){
+    switchTab("risk");
+    risk.focus();
+    return;
+  }
+  alert("No match found");
+}
+</script>
+<script>
+function downloadText(filename, text){
+  const blob = new Blob([text], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+/* Export single page */
+function exportPage(){
+  if (!currentPage) return alert("No page selected");
+  const content = notesData[currentSection][currentPage].content;
+  downloadText(`${currentPage}.txt`, content);
+}
+/* Export entire section */
+function exportSection(){
+  let out = `SECTION: ${currentSection}\n\n`;
+  for (const page in notesData[currentSection]){
+    out += `=== ${page} ===\n`;
+    out += notesData[currentSection][page].content + "\n\n";
+  }
+  downloadText(`${currentSection}.txt`, out);
+}
+</script>
+<script>
+/* ---------- THEME SWITCHER ---------- */
+function setTheme(theme){
+  document.body.setAttribute("data-theme", theme);
+  localStorage.setItem("appTheme", theme);
+}
+/* ---------- GLASSMORPHISM ---------- */
+function toggleGlass(){
+  const enabled = document.getElementById("glassToggle").checked;
+  document.body.classList.toggle("glass", enabled);
+  localStorage.setItem("glassMode", enabled);
+}
+/* ---------- RESTORE SETTINGS ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("appTheme") || "midnight";
+  setTheme(savedTheme);
+  document.getElementById("themeSelect").value = savedTheme;
+  const glass = localStorage.getItem("glassMode") === "true";
+  document.getElementById("glassToggle").checked = glass;
+  document.body.classList.toggle("glass", glass);
+});
+</script>
+<script>
+/* ================= DRAG LOGIC ================= */
+let dragItem = null;
+let offsetX = 0;
+let offsetY = 0;
+document.addEventListener("mousedown", e => {
+  const card = e.target.closest(".card.draggable");
+  if (!card) return;
+  dragItem = card;
+  const rect = card.getBoundingClientRect();
+  offsetX = e.clientX - rect.left;
+  offsetY = e.clientY - rect.top;
+  card.classList.add("dragging");
+  card.style.position = "absolute";
+  card.style.left = rect.left + "px";
+  card.style.top = rect.top + "px";
+});
+document.addEventListener("mousemove", e => {
+  if (!dragItem) return;
+  dragItem.style.left = e.clientX - offsetX + "px";
+  dragItem.style.top = e.clientY - offsetY + "px";
+});
+document.addEventListener("mouseup", () => {
+  if (!dragItem) return;
+  dragItem.classList.remove("dragging");
+  dragItem = null;
+});
+</script>
+<script>
+function updateDashboard(){
+  document.getElementById("statNotes").innerText =
+    getUsage("notes");
+  document.getElementById("statFlows").innerText =
+    getUsage("flowchart");
+  document.getElementById("statRisk").innerText =
+    getUsage("risk_notes");
+  document.getElementById("statTools").innerText = "Offline";
+}
+document.addEventListener("DOMContentLoaded", updateDashboard);
+</script>
+<script>
+function renderUsageGraph(){
+  const features = [
+    ["Text Formatter", "text_formatter"],
+    ["Dedupe", "dedupe"],
+    ["Risk Notes", "risk_notes"],
+    ["Flowchart", "flowchart"],
+    ["Notes", "notes"]
+  ];
+  const max = Math.max(...features.map(f => getUsage(f[1])), 1);
+  const graph = document.getElementById("usageGraph");
+  graph.innerHTML = "";
+  features.forEach(([label,key])=>{
+    const val = getUsage(key);
+    const width = (val / max) * 200;
+    graph.innerHTML += `
+      <div class="usage-bar">
+        <div class="usage-label">${label}</div>
+        <div class="usage-fill" style="width:${width}px"></div>
+        <div style="font-size:12px;color:var(--muted)">${val}</div>
+      </div>
+    `;
+  });
+}
+function updateDashboard(){
+  document.getElementById("statNotes").innerText = getUsage("notes");
+  document.getElementById("statFlows").innerText = getUsage("flowchart");
+  document.getElementById("statRisk").innerText = getUsage("risk_notes");
+  renderUsageGraph();
+}
+</script>
+<script>
+/* ================= USAGE TRACKING ================= */
+function trackUsage(feature){
+  const key = "usage_" + feature;
+  const count = parseInt(localStorage.getItem(key) || "0", 10) + 1;
+  localStorage.setItem(key, count);
+  updateDashboard();
+}
+function getUsage(feature){
+  return parseInt(localStorage.getItem("usage_" + feature) || "0", 10);
+}
+</script>
+<script>
+/* ================= BUBBLE GAME LOGIC ================= */
+let bubbleScore = 0;
+let bubbleTime = 60;
+let bubbleInterval = null;
+let bubbleTimer = null;
+function startBubbleGame(){
+document.getElementById("bubbleHigh").innerText =
+  localStorage.getItem("bubble_high_score") || 0;
+  const area = document.getElementById("bubbleGame");
+  if (!area) return;
+  area.querySelectorAll(".bubble").forEach(b => b.remove());
+  bubbleScore = 0;
+  bubbleTime = 60;
+  document.getElementById("bubbleScore").innerText = bubbleScore;
+  document.getElementById("bubbleTime").innerText = bubbleTime;
+  clearInterval(bubbleInterval);
+  clearInterval(bubbleTimer);
+  bubbleInterval = setInterval(() => {
+    const bubble = document.createElement("div");
+    const size = Math.random() * 35 + 20;
+    bubble.className = "bubble";
+    bubble.style.width = size + "px";
+    bubble.style.height = size + "px";
+    bubble.style.left = Math.random() * (area.clientWidth - size) + "px";
+    bubble.style.bottom = "-40px";
+    bubble.style.background =
+      `rgba(56,189,248,${Math.random() * 0.5 + 0.3})`;
+    bubble.style.animationDuration =
+      Math.random() * 4 + 4 + "s";
+    bubble.onclick = () => {
+      bubbleScore++;
+      document.getElementById("bubbleScore").innerText = bubbleScore;
+      bubble.remove();
+    };
+    area.appendChild(bubble);
+    setTimeout(() => bubble.remove(), 8000);
+  }, 600);
+  bubbleTimer = setInterval(() => {
+    bubbleTime--;
+    document.getElementById("bubbleTime").innerText = bubbleTime;
+if (bubbleTime <= 0){
+  clearInterval(bubbleInterval);
+  clearInterval(bubbleTimer);
+  finishBubbleGame();
+}
+  }, 1000);
+}
+/* Start game when tab is opened */
+const originalSwitchTab = switchTab;
+switchTab = function(id){
+  originalSwitchTab(id);
+  if (id === "break") startBubbleGame();
+};
+function finishBubbleGame(){
+  const highKey = "bubble_high_score";
+  const prevHigh = parseInt(localStorage.getItem(highKey) || "0", 10);
+  if (bubbleScore > prevHigh){
+    localStorage.setItem(highKey, bubbleScore);
+  }
+  document.getElementById("bubbleHigh").innerText =
+    localStorage.getItem(highKey);
+  const stress = calculateStressReduction(bubbleScore);
+  document.getElementById("rewardText").innerHTML = `
+    You popped <b>${bubbleScore}</b> bubbles.<br><br>
+    🧠 Stress reduced by <b>${stress}%</b><br><br>
+    You can happily work now 🙂
+  `;
+  document.getElementById("bubbleReward").style.display = "flex";
+}
+function calculateStressReduction(score){
+  if (score <= 5) return random(10,20);
+  if (score <= 15) return random(25,45);
+  if (score <= 30) return random(50,70);
+  return random(75,90);
+}
+function random(min,max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function closeReward(){
+  document.getElementById("bubbleReward").style.display = "none";
+  switchTab("dashboard"); // gentle nudge back to work 😄
+}
+</script>
+<script>
+/* ================= EMAIL GENERATOR ================= */
+function renderEmailForm(){
+  const type = document.getElementById("emailType").value;
+  const form = document.getElementById("emailForm");
+  form.innerHTML = "";
+  if (!type) return;
+  const fields = {
+    ooo: [
+      ["name","Your name"],
+      ["designation","Designation"],
+      ["from","Out of office from"],
+      ["to","Back on"],
+      ["backup","Backup contact name"],
+      ["backupEmail","Backup contact email"]
+    ],
+    escalation: [
+      ["issue","Issue title"],
+      ["summary","Issue summary"],
+      ["impact","Impact (Low / Medium / High)"],
+      ["request","What support is required"]
+    ],
+    followup: [
+      ["topic","Topic"],
+      ["lastDate","Last email date"],
+      ["recipient","Person / Team name"]
+    ]
+  };
+  fields[type].forEach(([id,label])=>{
+    form.innerHTML += `
+      <label style="margin-top:10px">${label}</label>
+      <input id="${id}" />
+    `;
+  });
+}
+function generateEmail(){
+  const type = document.getElementById("emailType").value;
+  if (!type) return alert("Select an email type");
+  let subject = "";
+  let body = "";
+  if (type === "ooo"){
+    subject = `Out of Office`;
+    body = `Hi,
+I will be out of the office from ${val("from")} to ${val("to")}.
+During this time, I will have limited access to email.
+For any urgent matters, please reach out to ${val("backup")}
+at ${val("backupEmail")}.
+I will respond once I return.
+Thank you for your understanding.
+Best regards,
+${val("name")}
+${val("designation")}`;
+  }
+  if (type === "escalation"){
+    subject = `Escalation: ${val("issue")}`;
+    body = `Hi Team,
+I would like to bring the following issue to your attention for review and support.
+Issue summary:
+${val("summary")}
+Impact:
+${val("impact")}
+Request:
+${val("request")}
+Please let me know if any additional details are required.
+Thank you for your support.
+Best regards,
+${getUserName()}`;
+  }
+  if (type === "followup"){
+    subject = `Follow-up: ${val("topic")}`;
+    body = `Hi ${val("recipient")},
+I hope you’re doing well.
+I’m just following up on my previous email sent on ${val("lastDate")}
+regarding ${val("topic")}.
+Please let me know if any additional information is needed from my side.
+Thank you.
+Best regards,
+${getUserName()}`;
+  }
+  const output = `Subject: ${subject}\n\n${body}`;
+  showEmail(output);
+}
+function val(id){
+  return document.getElementById(id)?.value || "";
+}
+function showEmail(text){
+  const out = document.getElementById("emailOutput");
+  out.style.display = "block";
+  out.innerText = text;
+  document.getElementById("copyEmailBtn").style.display = "inline-block";
+}
+function copyEmail(){
+  navigator.clipboard.writeText(
+    document.getElementById("emailOutput").innerText
+  );
+  alert("Email copied 😊");
+}
+function getUserName(){
+  return localStorage.getItem("email_user") || " ";
+}
+</script>
+<script>
+/* ================= BREAK GAME SWITCHER ================= */
+function openGame(type){
+  document.getElementById("breakMenu").style.display = "none";
+  document.getElementById("bubbleGameWrapper").style.display = "none";
+  document.getElementById("focusGameWrapper").style.display = "none";
+  if (type === "bubble"){
+    document.getElementById("bubbleGameWrapper").style.display = "block";
+    startBubbleGame();
+  }
+  if (type === "focus"){
+    document.getElementById("focusGameWrapper").style.display = "block";
+    startFocusGame();
+  }
+}
+function resetBreakGames(){
+  /* ---- Stop Bubble Game ---- */
+  clearInterval(bubbleInterval);
+  clearInterval(bubbleTimer);
+  /* ---- Stop Focus Game ---- */
+  clearTimeout(focusTimer);
+  /* ---- Remove bubbles ---- */
+  const bubbleArea = document.getElementById("bubbleGame");
+  if (bubbleArea){
+    bubbleArea.querySelectorAll(".bubble").forEach(b => b.remove());
+  }
+  /* ---- Hide game UIs ---- */
+  document.getElementById("bubbleGameWrapper").style.display = "none";
+  document.getElementById("focusGameWrapper").style.display = "none";
+  /* ---- Hide reward overlay if visible ---- */
+  const reward = document.getElementById("bubbleReward");
+  if (reward) reward.style.display = "none";
+  /* ---- Show game menu again ---- */
+  document.getElementById("breakMenu").style.display = "grid";
+}
+function resetBreakGames(){
+  /* ---- Stop Bubble Game ---- */
+  clearInterval(bubbleInterval);
+  clearInterval(bubbleTimer);
+  /* ---- Stop Focus Game ---- */
+  clearTimeout(focusTimer);
+  /* ---- Remove bubbles ---- */
+  const bubbleArea = document.getElementById("bubbleGame");
+  if (bubbleArea){
+    bubbleArea.querySelectorAll(".bubble").forEach(b => b.remove());
+  }
+  /* ---- Hide game UIs ---- */
+  document.getElementById("bubbleGameWrapper").style.display = "none";
+  document.getElementById("focusGameWrapper").style.display = "none";
+  /* ---- Hide reward overlay if visible ---- */
+  const reward = document.getElementById("bubbleReward");
+  if (reward) reward.style.display = "none";
+  /* ---- Show game menu again ---- */
+  document.getElementById("breakMenu").style.display = "grid";
+}
+/* ================= FOCUS CLICK GAME ================= */
+let focusScore = 0;
+let focusTimer = null;
+function startFocusGame(){
+  const area = document.getElementById("focusArea");
+  const dot = document.getElementById("focusDot");
+  focusScore = 0;
+  document.getElementById("focusScore").innerText = focusScore;
+  moveDot();
+  dot.onclick = () => {
+    focusScore++;
+    document.getElementById("focusScore").innerText = focusScore;
+    moveDot();
+  };
+  clearTimeout(focusTimer);
+  focusTimer = setTimeout(() => {
+    alert(
+      `Nice work 😊\nFocus improved and mental noise reduced.`
+    );
+    switchTab("dashboard");
+  }, 40000);
+}
+function moveDot(){
+  const area = document.getElementById("focusArea");
+  const dot = document.getElementById("focusDot");
+  const x = Math.random() * (area.clientWidth - 30);
+  const y = Math.random() * (area.clientHeight - 30);
+  dot.style.left = x + "px";
+  dot.style.top = y + "px";
+}
+</script>
+<script>
+async function convertSheet(event) {
+  event.preventDefault(); 
+  const fileInput = document.querySelector('#sheet input[type="file"]');
+  if (!fileInput.files.length) {
+    alert("Please choose a file first");
+    return;
+  }
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+  try {
+    const res = await fetch("/sheet_to_text", {
+      method: "POST",
+      body: formData
+    });
+    const text = await res.text();
+    // Show output
+    let out = document.getElementById("sheet-output");
+    if (!out) {
+      out = document.createElement("div");
+      out.id = "sheet-output";
+      out.className = "output";
+      document.querySelector("#sheet .card").appendChild(out);
+    }
+    out.innerText = text;
+  } catch (err) {
+    alert("Conversion failed");
+    console.error(err);
+  }
+}
+</script>
+
+<script>
+function resetDedupe(){
+  const input = document.getElementById("dedupe-input");
+  const output = document.getElementById("dedupe-output");
+
+  if (input) input.value = "";
+  if (output) output.innerText = "";
+}
+
+function copyDedupe(){
+  const output = document.getElementById("dedupe-output");
+  if (!output || !output.innerText.trim()) {
+    alert("Nothing to copy");
+    return;
+  }
+  navigator.clipboard.writeText(output.innerText);
+}
+</script>
+
+<script>
+async function calculateKPI(event){
+  event.preventDefault();
+
+  const total = document.getElementById("kpi-total").value;
+  const defects = document.getElementById("kpi-defects").value;
+  const fp = document.getElementById("kpi-fp").value;
+
+  const formData = new FormData();
+  formData.append("total", total);
+  formData.append("defects", defects);
+  formData.append("fp", fp);
+
+  try {
+    const res = await fetch("/kpi", {
+      method: "POST",
+      body: formData
+    });
+
+    const text = await res.text();
+    const out = document.getElementById("kpi-output");
+    out.style.display = "block";
+    out.innerText = text;
+
+  } catch (err) {
+    alert("KPI calculation failed");
+  }
+}
+
+function resetKPI(){
+  document.getElementById("kpi-total").value = "";
+  document.getElementById("kpi-defects").value = "";
+  document.getElementById("kpi-fp").value = "";
+  document.getElementById("kpi-output").style.display = "none";
+}
+
+function copyKPI(){
+  const out = document.getElementById("kpi-output");
+  if (!out.innerText.trim()) {
+    alert("Nothing to copy");
+    return;
+  }
+  navigator.clipboard.writeText(out.innerText);
+}
+</script>
+
+
+
+
+
+
+<script>
+document.getElementById("pdfWordForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const result = document.getElementById("pdfWordResult");
+  result.style.display = "block";
+  result.innerText = "Converting...";
+
+  const res = await fetch("/pdf_to_word", {
+    method: "POST",
+    body: new FormData(e.target)
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    result.innerHTML = `
+      ✅ Converted<br><br>
+      <a href="/download/docx/${data.file_id}">
+        <button class="mini-btn">Download Word</button>
+      </a>
+    `;
+  } else {
+    result.innerText = data.error;
+  }
+});
+</script>
+
+<script>
+const RISK_KEY = "risk_register";
+let risks = JSON.parse(localStorage.getItem(RISK_KEY) || "[]");
+
+function saveRisks(){
+  localStorage.setItem(RISK_KEY, JSON.stringify(risks));
+  renderRisks();
+  trackUsage("risk_notes");
+}
+
+function addRisk(){
+  risks.push({
+    title: rTitle.value,
+    region: rRegion.value,
+    severity: rSeverity.value,
+    status: rStatus.value,
+    desc: rDesc.value,
+    impact: rImpact.value,
+    mitigation: rMitigation.value
+  });
+  saveRisks();
+  document.querySelectorAll("#risk input, #risk textarea")
+    .forEach(i => i.value = "");
+}
+
+function renderRisks(){
+  const tbody = document.querySelector("#riskTable tbody");
+  tbody.innerHTML = "";
+  risks.forEach((r,i)=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${i+1}</td>
+        <td>${r.title}</td>
+        <td>${r.region}</td>
+        <td>${r.severity}</td>
+        <td>${r.status}</td>
+        <td>
+          <button class="mini-btn danger" onclick="deleteRisk(${i})">
+            ✖
+          </button>
+        </td>
+      </tr>`;
+  });
+  document.getElementById("statRisk").innerText = risks.length;
+}
+
+function deleteRisk(i){
+  risks.splice(i,1);
+  saveRisks();
+}
+
+function clearRisks(){
+  if(confirm("Delete all risks?")){
+    risks = [];
+    saveRisks();
+  }
+}
+
+function exportRisks(){
+  let csv = "Title,Region,Severity,Status,Description,Impact,Mitigation\n";
+  risks.forEach(r=>{
+    csv += `"${r.title}","${r.region}","${r.severity}",
+"${r.status}","${r.desc}","${r.impact}","${r.mitigation}"\n`;
+  });
+  downloadText("risk_register.xls", csv);
+}
+
+document.addEventListener("DOMContentLoaded", renderRisks);
+</script>
+
+
+<script>
+document.getElementById("imageTextForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const out = document.getElementById("imageTextOutput");
+  out.style.display = "block";
+  out.innerText = "Extracting text...";
+
+  const res = await fetch("/image_to_text", {
+    method: "POST",
+    body: new FormData(e.target)
+  });
+
+  const text = await res.text();
+  out.innerText = text;
+  trackUsage("image_to_text");
+});
+
+function copyImageText(){
+  navigator.clipboard.writeText(
+    document.getElementById("imageTextOutput").innerText
+  );
+}
+
+function resetImageText(){
+  document.getElementById("imageTextOutput").innerText = "";
+  document.getElementById("imageTextOutput").style.display = "none";
+}
+</script>
+
+<script>
+function updateDashboard(){
+  statNotes.innerText = getUsage("notes");
+  statFlows.innerText = getUsage("flowchart");
+  statOCR.innerText = getUsage("image_to_text");
+  statRisk.innerText = risks.length;
+  renderUsageGraph();
+}
+document.addEventListener("DOMContentLoaded", updateDashboard);
+</script>
+
+
+<script>
+document.getElementById("wordPdfForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const result = document.getElementById("wordPdfResult");
+  result.style.display = "block";
+  result.innerText = "Converting...";
+
+  const res = await fetch("/word_to_pdf", {
+    method: "POST",
+    body: new FormData(e.target)
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    result.innerHTML = `
+      ✅ Converted<br><br>
+      <a href="/download/pdf/${data.file_id}">
+        <button class="mini-btn">Download PDF</button>
+      </a>
+    `;
+  } else {
+    result.innerText = data.error || "Conversion failed";
+  }
+});
+</script>
+
+<script>
+function cleanOCR(){
+  const out = document.getElementById("imageTextOutput");
+  const lines = out.innerText.split("\n");
+
+  const cleaned = lines.filter(l =>
+    !l.trim().startsWith("<") &&
+    !l.includes("{") &&
+    !l.includes("}") &&
+    !l.includes(";")
+  );
+
+  out.innerText = cleaned.join("\n").trim();
+}
+</script>
+
+<script>
+/* ================= IMAGE → TEXT (OCR) ================= */
+
+// COPY OCR TEXT
+function copyOCR(){
+  const out = document.getElementById("ocrOutput");
+  if (!out || !out.innerText.trim()){
+    alert("Nothing to copy");
+    return;
+  }
+  navigator.clipboard.writeText(out.innerText);
+  alert("Text copied ✔");
+}
+
+// RESET OCR
+function resetOCR(){
+  const out = document.getElementById("ocrOutput");
+  if (out){
+    out.innerText = "";
+  }
+  const fileInput = document.querySelector('#ocrForm input[type="file"]');
+  if (fileInput){
+    fileInput.value = "";
+  }
+}
+
+// OPTIONAL: track usage on submit
+document.getElementById("ocrForm").addEventListener("submit", () => {
+  trackUsage("image_to_text");
+});
+</script>
+
+<script>
+/* ================= ASSISTANT LOGIC ================= */
+
+function sendAssistant(){
+  const input = document.getElementById("assistantInput");
+  const chat = document.getElementById("assistantChat");
+  const text = input.value.trim();
+  if (!text) return;
+
+  appendMsg("You", text);
+  input.value = "";
+
+  const reply = analyzeAssistant(text.toLowerCase());
+  appendMsg("Assistant", reply);
+
+  trackUsage("assistant");
+}
+
+function appendMsg(sender, text){
+  const chat = document.getElementById("assistantChat");
+  const div = document.createElement("div");
+  div.style.marginBottom = "10px";
+  div.innerHTML = `<b>${sender}:</b> ${text}`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+
+/* ---------- CORE THINKING (FIXED) ---------- */
+function analyzeAssistant(text){
+
+  /* ================= 1️⃣ DEFINITIONS (TOP PRIORITY) ================= */
+
+  if (
+    text === "risk" ||
+    text.startsWith("what is risk") ||
+    text.startsWith("define risk")
+  ){
+    return (
+`📘 What is Risk?
+
+Risk is the possibility that uncertainty
+may affect objectives.
+
+In simple terms:
+Risk is the chance that something
+may not go as planned.`
+    );
+  }
+
+  if (
+    text.includes("risk framework") ||
+    text.includes("risk management framework")
+  ){
+    return (
+`🧠 Risk Management Framework
+
+1️⃣ Identify risks
+2️⃣ Assess likelihood & impact
+3️⃣ Evaluate priority
+4️⃣ Treat risks (avoid, mitigate, transfer, accept)
+5️⃣ Monitor & report
+
+This framework ensures structured,
+repeatable risk handling.`
+    );
+  }
+
+  /* ================= 2️⃣ SCENARIO / RISK DETECTION ================= */
+
+  if (
+    text.includes("fraud") ||
+    text.includes("carrier") ||
+    text.includes("scac") ||
+    text.includes("delay") ||
+    text.includes("issue") ||
+    text.includes("problem")
+  ){
+    return (
+`🔍 Possible Risk Identified
+
+• Area: Operations / Carrier Integrity
+• Suggested Severity: Medium–High
+
+Questions to consider:
+• Is this recurring?
+• Any financial or customer impact?
+
+Suggested next steps:
+✔ Add to Risk Register
+✔ Document in Notes
+✔ Create Flowchart`
+    );
+  }
+
+  /* ================= 3️⃣ SIMPLE CONVERSATION ================= */
+
+  if (text.includes("tired")){
+    return "That sounds exhausting. You don’t have to push right now.";
+  }
+
+  if (text.includes("stuck")){
+    return "Feeling stuck is okay. Usually it means something needs clarity.";
+  }
+
+  if (text.includes("confused")){
+    return "Confusion is the start of understanding.";
+  }
+
+  if (text.includes("overwhelmed")){
+    return "That’s understandable. One small step is enough for now.";
+  }
+
+  /* ================= DEFAULT ================= */
+
+  return "I’m here. Tell me a bit more.";
+}
+</script>
+
+
+
+</div> <!-- container -->
+<footer class="app-footer">
+  Personal Automation Suite · v1.0 · Offline · Local Only
+</footer>
+</div> <!-- END .app -->
+
+<script>
+/* ================= KNOWLEDGE ENGINE ================= */
+
+let KNOWLEDGE_INDEX = {};
+
+// 1️⃣ Load the knowledge index
+fetch("/static/knowledge/knowledge_index.json")
+  .then(res => res.json())
+  .then(data => {
+    KNOWLEDGE_INDEX = data;
+    populateChapters("risk_framework");
+  })
+  .catch(err => {
+    console.error("Failed to load knowledge index", err);
+  });
+
+function populateChapters(framework){
+  const chapterSelect =
+    document.getElementById("knowledgeChapter");
+
+  chapterSelect.innerHTML =
+    `<option value="">Select Chapter</option>`;
+
+  const files = new Set(
+    Object.values(KNOWLEDGE_INDEX[framework])
+  );
+
+  [...files]
+    .sort()
+    .forEach(file => {
+      const label = file
+        .replace(".md","")
+        .replace(/_/g," ")
+        .replace(/^\d+\s*/,"")
+        .replace(/\b\w/g, c => c.toUpperCase());
+
+      const opt = document.createElement("option");
+      opt.value = file;
+      opt.textContent = label;
+      chapterSelect.appendChild(opt);
+    });
+}
+
+
+// 2️⃣ Main knowledge handler
+async function askKnowledge(){
+  const q = document.getElementById("knowledgeInput")
+    .value.toLowerCase().trim();
+
+  const out = document.getElementById("knowledgeOutput");
+  out.style.display = "block";
+
+  if (!q){
+    out.innerHTML = "Please ask a question.";
+    return;
+  }
+
+  // Loop through frameworks (risk_framework for now)
+  for (const section in KNOWLEDGE_INDEX){
+
+    // 🔑 Longest match first (critical)
+    const keys = Object.keys(KNOWLEDGE_INDEX[section])
+      .sort((a, b) => b.length - a.length);
+
+    for (const key of keys){
+      if (q.includes(key)){
+        const file = KNOWLEDGE_INDEX[section][key];
+
+        try {
+          const res = await fetch(
+            `/static/knowledge/${section}/${file}`
+          );
+
+          if (!res.ok) throw new Error("File not found");
+
+          const md = await res.text();
+          out.innerHTML = renderMarkdown(md);
+          return;
+
+        } catch (e){
+          out.innerHTML = "Chapter found, but file could not be loaded.";
+          return;
+        }
+      }
+    }
+  }
+
+  out.innerHTML = "No matching chapter found. Try being more specific.";
+}
+
+// 3️⃣ Minimal markdown renderer
+function renderMarkdown(md){
+  return md
+    .replace(/^# (.*$)/gim, "<h3>$1</h3>")
+    .replace(/^## (.*$)/gim, "<h4>$1</h4>")
+    .replace(/^### (.*$)/gim, "<h5>$1</h5>")
+    .replace(/\*\*(.*?)\*\*/gim, "<b>$1</b>")
+    .replace(/\n/g, "<br>");
+}
+
+function resetKnowledge(){
+  document.getElementById("knowledgeInput").value = "";
+  document.getElementById("knowledgeOutput").style.display = "none";
+}
+</script>
+
+<script>
+async function loadSelectedChapter(){
+  const framework =
+    document.getElementById("knowledgeFramework").value;
+  const chapter =
+    document.getElementById("knowledgeChapter").value;
+  const out =
+    document.getElementById("knowledgeOutput");
+
+  if (!chapter){
+    out.style.display = "block";
+    out.innerHTML = "Please select a chapter.";
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `/static/knowledge/${framework}/${chapter}`
+    );
+
+    if (!res.ok) throw new Error("File not found");
+
+    const md = await res.text();
+    out.style.display = "block";
+    out.innerHTML = renderMarkdown(md);
+
+  } catch (e){
+    out.style.display = "block";
+    out.innerHTML = "Unable to load chapter.";
+  }
+}
+</script>
+
+
+</body>
+</html>

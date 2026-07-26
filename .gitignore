@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.log
+
+# Virtual environments
+buildenv/
+venv/
+.venv/
+env/
+
+# PyInstaller output
+build/
+dist/
+
+# Temporary and uploaded files
+uploads/
+temp/
+tmp/
+*.tmp
+
+# Large local dependencies
+libreoffice/
+tesseract/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

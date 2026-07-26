@@ -1,0 +1,119 @@
+{
+  "risk_framework": {
+    "what is risk": "02_what_is_risk.md",
+    "define risk": "02_what_is_risk.md",
+    "risk meaning": "02_what_is_risk.md",
+
+    "risk management": "01_introduction.md",
+    "risk management framework": "01_introduction.md",
+    "what is risk framework": "01_introduction.md",
+    "erm": "01_introduction.md",
+    "enterprise risk management": "01_introduction.md",
+
+    "objectives of risk management": "03_objectives_of_risk_management.md",
+    "why risk management": "03_objectives_of_risk_management.md",
+    "purpose of risk management": "03_objectives_of_risk_management.md",
+
+    "risk principles": "04_risk_principles.md",
+    "principles of risk management": "04_risk_principles.md",
+    "iso risk principles": "04_risk_principles.md",
+
+    "risk governance": "05_risk_governance.md",
+    "governance model": "05_risk_governance.md",
+    "risk oversight": "05_risk_governance.md",
+
+    "risk culture": "06_risk_culture.md",
+    "culture of risk": "06_risk_culture.md",
+    "risk mindset": "06_risk_culture.md",
+
+    "risk taxonomy": "07_risk_taxonomy.md",
+    "risk categories": "07_risk_taxonomy.md",
+    "types of risk": "07_risk_taxonomy.md",
+
+    "risk identification": "08_risk_identification.md",
+    "identify risks": "08_risk_identification.md",
+    "how to identify risks": "08_risk_identification.md",
+
+    "risk sources": "09_risk_sources.md",
+    "where risks come from": "09_risk_sources.md",
+    "sources of risk": "09_risk_sources.md",
+
+    "risk assessment": "10_risk_assessment.md",
+    "assess risk": "10_risk_assessment.md",
+    "risk scoring": "10_risk_assessment.md",
+
+    "risk analysis": "11_risk_analysis_methods.md",
+    "qualitative risk analysis": "11_risk_analysis_methods.md",
+    "quantitative risk analysis": "11_risk_analysis_methods.md",
+
+    "risk evaluation": "12_risk_evaluation.md",
+    "evaluate risk": "12_risk_evaluation.md",
+
+    "risk prioritization": "13_risk_prioritization.md",
+    "risk ranking": "13_risk_prioritization.md",
+
+    "risk treatment": "14_risk_treatment.md",
+    "risk response": "14_risk_treatment.md",
+    "mitigate risk": "14_risk_treatment.md",
+    "avoid risk": "14_risk_treatment.md",
+
+    "controls": "15_controls_and_mitigations.md",
+    "mitigations": "15_controls_and_mitigations.md",
+    "risk controls": "15_controls_and_mitigations.md",
+
+    "residual risk": "16_residual_risk.md",
+    "remaining risk": "16_residual_risk.md",
+
+    "risk appetite": "17_risk_appetite.md",
+    "risk tolerance": "18_risk_tolerance.md",
+
+    "risk ownership": "19_risk_ownership.md",
+    "risk owner": "19_risk_ownership.md",
+
+    "risk reporting": "21_risk_reporting.md",
+    "risk monitoring": "21_risk_reporting.md",
+    "kri": "21_risk_reporting.md",
+    "risk metrics": "21_risk_reporting.md",
+
+    "continuous improvement": "23_continuous_risk_improvement.md",
+    "risk maturity": "23_continuous_risk_improvement.md",
+
+    "cyber risk": "26_cyber_risk.md",
+    "information security risk": "26_cyber_risk.md",
+
+    "operational risk": "27_operational_risk.md",
+    "process risk": "27_operational_risk.md",
+
+    "compliance risk": "28_compliance_risk.md",
+    "regulatory risk": "28_compliance_risk.md",
+
+    "financial risk": "29_financial_risk.md",
+    "credit risk": "29_financial_risk.md",
+
+    "reputational risk": "30_reputational_risk.md",
+    "brand risk": "30_reputational_risk.md",
+
+    "supply chain risk": "31_supply_chain_risk.md",
+    "vendor risk": "31_supply_chain_risk.md",
+    "third party risk": "31_supply_chain_risk.md",
+
+    "risk in projects": "32_risk_in_programs_projects.md",
+    "program risk": "32_risk_in_programs_projects.md",
+    "project risk": "32_risk_in_programs_projects.md",
+
+    "risk lifecycle": "33_risk_lifecycle_summary.md",
+    "end to end risk framework": "33_risk_lifecycle_summary.md",
+
+    "risk case studies": "34_case_studies.md",
+    "risk examples": "34_case_studies.md",
+
+    "risk failures": "35_common_failures.md",
+    "why risk management fails": "35_common_failures.md",
+
+    "risk maturity model": "36_risk_maturity_models.md",
+    "risk capability": "36_risk_maturity_models.md",
+
+    "risk summary": "37_summary_and_next_steps.md",
+    "next steps in risk management": "37_summary_and_next_steps.md"
+  }
+}
