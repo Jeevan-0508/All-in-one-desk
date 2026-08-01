@@ -1,85 +1,220 @@
+<div align="center">
 
-# 🖥️ All-in-one-desk
+<img src="https://img.shields.io/badge/-%F0%9F%96%A5%EF%B8%8F%20ALL--IN--ONE%20DESK-008080?style=for-the-badge&labelColor=004d4d&color=008080" alt="All-in-One Desk" height="40"/>
 
-> An offline-first Python productivity and automation suite with 15+ tools — all running locally on your machine. Zero cloud dependency. Zero risk of data exposure.
+### 15+ professional tools. Zero internet. One app.
 
-![Version](https://img.shields.io/badge/version-1.0-teal)
-![Status](https://img.shields.io/badge/status-Offline%20%7C%20Local%20Only-green)
-![Python](https://img.shields.io/badge/python-Flask-blue)
-![License](https://img.shields.io/badge/license-MIT-brightgreen)
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Tesseract](https://img.shields.io/badge/Tesseract-OCR%20Engine-4A90D9?style=for-the-badge&logo=googlelens&logoColor=white)](https://github.com/tesseract-ocr/tesseract)
+[![LibreOffice](https://img.shields.io/badge/LibreOffice-Headless-18A303?style=for-the-badge&logo=libreoffice&logoColor=white)](https://www.libreoffice.org/)
+[![PyInstaller](https://img.shields.io/badge/PyInstaller-Packaged-6C3483?style=for-the-badge&logo=python&logoColor=white)](https://pyinstaller.org/)
+
+[![Status](https://img.shields.io/badge/Status-Offline%20%7C%20Local%20Only-00b894?style=flat-square)](.)
+[![Version](https://img.shields.io/badge/Version-1.0-008080?style=flat-square)](.)
+[![Data Privacy](https://img.shields.io/badge/Data%20Privacy-100%25%20Local-success?style=flat-square&logo=lock)](.)
+[![Tools](https://img.shields.io/badge/Tools-15+-FF6B6B?style=flat-square)](.)
+
+<br/>
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║  📄 Documents  ·  🔧 Text  ·  📊 Analytics  ·  🤖 AI  ·  🧘 Wellness  ║
+║          Everything you need. Nothing leaves your machine.          ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+</div>
 
 ---
 
-## 🎯 What is All-in-one-desk?
+## 🎯 What Is This?
 
-**All-in-one-desk** is a secure, all-in-one desktop application that combines 15+ productivity tools into a single interface. It runs **100% offline** — no internet required, no data leaves your machine, ever. Built for professionals who handle sensitive documents and need powerful tools without cloud dependency or data exposure risks.
+**All-in-One Desk** is a self-contained desktop productivity application that packages **15+ professional tools** into a single offline interface — no subscriptions, no cloud uploads, no data leaks.
 
----
+Built for professionals who handle **sensitive or confidential documents** and can't afford to pipe files through third-party cloud services. Everything runs locally via a lightweight Flask server, packaged into a standalone executable.
 
-## 🛡️ Why It's Risk-Free
-
-| Security Feature | Details |
-|-----------------|---------|
-| 🔒 **100% Offline** | No internet connection needed — works in airplane mode |
-| 💻 **Local Only** | All processing happens on YOUR machine |
-| 🚫 **No Cloud Upload** | Nothing is sent to external servers |
-| 🗑️ **No Data Retention** | Temporary files are auto-cleaned |
-| ✅ **Safe for Sensitive Docs** | Handle confidential documents without worry |
-| 🔐 **No Account Required** | No login, no tracking, no telemetry |
+> Think: your own private Notion + Adobe Acrobat + Grammarly + AI assistant — but air-gapped.
 
 ---
 
-## ✨ Features & Capabilities
+## ✨ Features At a Glance
 
-### 📝 Document Conversion
-| Tool | What It Does |
-|------|-------------|
-| **PDF → Word** | Convert PDF documents to editable Word format locally |
-| **Word → PDF** | Convert Word documents to professional PDFs |
-| **Excel/CSV → TXT** | Transform spreadsheet data into plain text |
-| **Image → Text (OCR)** | Extract text from images using Tesseract OCR engine |
+```mermaid
+mindmap
+  root((All-in-One Desk))
+    📝 Documents
+      PDF → Word
+      Word → PDF
+      Excel/CSV → TXT
+      Image → Text OCR
+    🔧 Text Tools
+      Text Formatter
+      Remove Duplicates
+      Text Diff Viewer
+    📊 Analytics
+      KPI Calculator
+      Dashboard
+      Risk Notes
+    🤖 AI & Productivity
+      Email Generator
+      Flowchart Generator
+      Knowledge Assistant
+      Notes with Search
+    🧘 Wellness
+      Break Reminder
+```
+
+---
+
+## 🗂️ Tool Breakdown
+
+### 📝 Document Tools
+
+<table>
+<tr><td width="50%">
+
+**PDF → Word** — Convert any PDF into a fully editable `.docx`
+
+**Word → PDF** — Export Word docs to polished PDFs, no MS Office needed
+
+</td><td width="50%">
+
+**Excel / CSV → TXT** — Flatten spreadsheet data to plain text
+
+**🔍 Image → Text (OCR)** — Extract text from screenshots via Tesseract
+
+</td></tr>
+</table>
 
 ### 🔧 Text Processing
-| Tool | What It Does |
-|------|-------------|
-| **Text Formatter** | Clean, format, and transform text instantly |
-| **Remove Duplicates** | Deduplicate lists, emails, or any data in one click |
-| **Text Diff** | Compare two texts side-by-side with highlighted differences |
+
+<table>
+<tr>
+<td align="center" width="33%"><b>Text Formatter</b><br/>Clean messy text, fix encoding, normalize whitespace</td>
+<td align="center" width="33%"><b>Remove Duplicates</b><br/>Deduplicate lists, emails, IDs instantly</td>
+<td align="center" width="33%"><b>Text Diff</b><br/>Side-by-side visual diff between two texts</td>
+</tr>
+</table>
 
 ### 📊 Data & Analytics
-| Tool | What It Does |
-|------|-------------|
-| **KPI Calculator** | Calculate key performance indicators from your data |
-| **Dashboard** | Interactive data visualization and metrics display |
-| **Risk Notes** | Document and track risk assessments securely |
+
+<table>
+<tr>
+<td align="center" width="33%"><b>📈 KPI Calculator</b><br/>Feed raw numbers, get KPIs back</td>
+<td align="center" width="33%"><b>📊 Dashboard</b><br/>Interactive charts from local data</td>
+<td align="center" width="33%"><b>📋 Risk Notes</b><br/>Structured risk docs with search</td>
+</tr>
+</table>
 
 ### 🤖 Productivity & AI
-| Tool | What It Does |
-|------|-------------|
-| **Email Generator** | Draft professional emails from templates |
-| **Flowchart Generator** | Create process flowcharts from text descriptions |
-| **Knowledge Assistant** | Local AI-powered Q&A — no data sent anywhere |
-| **Notes** | Persistent note-taking with search functionality |
 
-### 🧘 Wellness
-| Tool | What It Does |
-|------|-------------|
-| **Take a Break** | Smart reminder system for work-life balance |
+<table>
+<tr><td width="50%">
+
+**✉️ Email Generator** — Professional emails from context templates
+
+**🔀 Flowchart Generator** — Plain English → diagram
+
+</td><td width="50%">
+
+**🧠 Knowledge Assistant** — AI Q&A, no internet required
+
+**📝 Notes** — Persistent notes with full-text search
+
+</td></tr>
+</table>
+
+---
+
+## 🔐 Security Architecture
+
+```
+┌──────────────────────────────────────────────────────┐
+│                    YOUR MACHINE                       │
+│  ┌────────────┐    ┌──────────────┐    ┌──────────┐  │
+│  │  Your File │───▶│  All-in-One  │───▶│  Output  │  │
+│  │  (Input)   │    │     Desk     │    │  (Local) │  │
+│  └────────────┘    └──────────────┘    └──────────┘  │
+│                 ❌ No Internet  ❌ No Cloud           │
+│                 ❌ No API Keys  ✅ 100% Offline       │
+└──────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| **Backend** | Python (Flask) |
-| **Frontend** | HTML, CSS, JavaScript |
-| **OCR Engine** | Tesseract |
-| **Document Processing** | LibreOffice (headless) |
-| **Packaging** | PyInstaller |
-| **Theme** | Custom (Emerald, Glass mode) |
+```mermaid
+flowchart LR
+    A[👤 User] -->|Opens .exe| B[PyInstaller\nStandalone App]
+    B -->|Starts| C[Flask\nLocal Server\nlocalhost:5000]
+    C -->|Serves| D[HTML/CSS/JS\nFrontend]
+    D -->|Upload file| E{Tool Router}
+    E -->|PDF/Word| F[LibreOffice\nHeadless]
+    E -->|Image OCR| G[Tesseract\nOCR Engine]
+    E -->|Text ops| H[Python Stdlib]
+    E -->|AI features| I[Local AI Module]
+    F & G & H & I -->|Result| D
+    style C fill:#000,color:#fff
+    style F fill:#18A303,color:#fff
+    style G fill:#4A90D9,color:#fff
+    style I fill:#6C3483,color:#fff
+```
+
+| Layer | Technology | Role |
+|:---:|:---:|:---|
+| 🐍 Backend | Python + Flask | Routes, file processing |
+| 🎨 Frontend | HTML + CSS + JS | Emerald/Glass UI |
+| 🔍 OCR | Tesseract | Image-to-text |
+| 📄 Documents | LibreOffice headless | PDF↔Word, no MS Office |
+| 📦 Packaging | PyInstaller | Single `.exe` |
 
 ---
 
-## 📁 Project Structure
+## 🚀 Getting Started
 
+```bash
+git clone https://github.com/Jeevan-0508/All-in-one-desk.git
+cd All-in-one-desk
+python -m venv buildenv
+buildenv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+# Open http://localhost:5000
+```
+
+**Build standalone `.exe`:**
+```bash
+pyinstaller app.spec
+```
+
+---
+
+## 🎨 Themes
+
+| 🌿 Emerald | 🪟 Glass |
+|:---:|:---:|
+| Teal accents, dark interface | Frosted transparency effects |
+
+---
+
+## 💡 Skills Demonstrated
+
+| Skill | Detail |
+|:---|:---|
+| 🐍 Python / Flask | REST API, file handling, subprocess management |
+| 📦 App Packaging | PyInstaller with binary deps (Tesseract, LibreOffice) |
+| 🔍 OCR Integration | Tesseract engine configuration, image pipeline |
+| 🔒 Privacy-First Design | Offline architecture, zero data egress |
+| 🧠 Product Thinking | Unified 15-tool suite replacing cloud dependencies |
+
+---
+
+<div align="center">
+
+**Built by [Jeevan Kumar](https://github.com/Jeevan-0508)**
+
+*Work smarter, not harder — and keep your data safe while doing it.*
+
+</div>
