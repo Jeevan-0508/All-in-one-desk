@@ -202,6 +202,16 @@ pyinstaller app.spec
 
 ## 📸 Screenshots
 
+| Email Generator | Notes |
+|:---:|:---:|
+| ![Email Generator](screenshot-email-generator.png) | ![Notes](screenshot-notes.png) |
+| *Professional email templates — OOO, escalation, follow-up and more* | *Sectioned notebook with pages, rename, export — all local* |
+
+| Dashboard | Knowledge Assistant |
+|:---:|:---:|
+| ![Dashboard](screenshot-dashboard.png) | ![Knowledge Assistant](screenshot-knowledge-assistant.png) |
+| *Usage stats — notes pages, flowcharts created, OCR runs, feature breakdown* | *Built-in Risk Framework knowledge base — ask questions, get structured answers* |
+
 | Flowchart Generator | Take a Break |
 |:---:|:---:|
 | ![Flowchart Generator](screenshot-flowchart.png) | ![Bubble Break](screenshot-break.png) |
