@@ -45,13 +45,25 @@ def get_soffice_path():
 
 # ================= TESSERACT =================
 def get_tesseract_path():
+    # Bundled via PyInstaller
     if getattr(sys, 'frozen', False):
         return os.path.join(sys._MEIPASS, "tesseract", "tesseract.exe")
-    return r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    # Check PATH first (works on Mac/Linux after brew/apt install)
+    import shutil
+    path_result = shutil.which("tesseract")
+    if path_result:
+        return path_result
+    # Windows common install locations
+    for p in [r"C:\Program Files\Tesseract-OCR\tesseract.exe", r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"]:
+        if os.path.exists(p):
+            return p
+    # Mac/Linux fallback
+    for p in ["/usr/local/bin/tesseract", "/opt/homebrew/bin/tesseract", "/usr/bin/tesseract"]:
+        if os.path.exists(p):
+            return p
+    return "tesseract"  # last resort — assumes it is on PATH
 
-pytesseract.pytesseract.tesseract_cmd = (
-    r"C:\Users\jeekumak\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
-)
+pytesseract.pytesseract.tesseract_cmd = get_tesseract_path()
 
 # ================= HOME =================
 @app.route("/", methods=["GET", "POST"])
