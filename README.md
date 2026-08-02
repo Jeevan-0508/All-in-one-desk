@@ -199,6 +199,16 @@ pyinstaller app.spec
 
 ---
 
+
+## 📸 Screenshots
+
+| Flowchart Generator | Take a Break |
+|:---:|:---:|
+| ![Flowchart Generator](screenshot-flowchart.png) | ![Bubble Break](screenshot-break.png) |
+| *Mermaid-powered diagrams — type plain text, render instantly* | *Built-in Bubble Break wellness game to reset your focus* |
+
+---
+
 ## 💡 Skills Demonstrated
 
 | Skill | Detail |
