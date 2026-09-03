@@ -10,6 +10,7 @@
 [![LibreOffice](https://img.shields.io/badge/LibreOffice-Headless-18A303?style=for-the-badge&logo=libreoffice&logoColor=white)](https://www.libreoffice.org/)
 [![PyInstaller](https://img.shields.io/badge/PyInstaller-Packaged-6C3483?style=for-the-badge&logo=python&logoColor=white)](https://pyinstaller.org/)
 
+[![Tests](https://github.com/Jeevan-0508/All-in-one-desk/actions/workflows/ci.yml/badge.svg)](https://github.com/Jeevan-0508/All-in-one-desk/actions/workflows/ci.yml)
 [![Status](https://img.shields.io/badge/Status-Offline%20%7C%20Local%20Only-00b894?style=flat-square)](.)
 [![Version](https://img.shields.io/badge/Version-1.0-008080?style=flat-square)](.)
 [![Data Privacy](https://img.shields.io/badge/Data%20Privacy-100%25%20Local-success?style=flat-square&logo=lock)](.)
@@ -174,6 +175,25 @@ flowchart LR
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+Most tools are pure Python, but two features call out to external engines.
+Install these first or those two tabs will report an error:
+
+| Feature | Needs | Windows | macOS | Linux |
+|:---|:---|:---|:---|:---|
+| Image → Text (OCR) | Tesseract | [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) | `brew install tesseract` | `apt install tesseract-ocr` |
+| Word → PDF | LibreOffice | [libreoffice.org](https://www.libreoffice.org/download/) | `brew install --cask libreoffice` | `apt install libreoffice` |
+
+Both are located automatically via `PATH` or their standard install
+directories — no configuration needed.
+
+Everything else (text tools, diff, dedupe, KPI, notes, dashboard,
+flowcharts, email templates, knowledge assistant) runs with no extra
+dependencies.
+
+### Run it
+
 ```bash
 git clone https://github.com/Jeevan-0508/All-in-one-desk.git
 cd All-in-one-desk
@@ -184,10 +204,31 @@ python app.py
 # Open http://localhost:5000
 ```
 
+The browser opens automatically. To use a different port — port 5000 is
+taken by AirPlay on macOS:
+
+```bash
+PORT=8000 python app.py
+```
+
+### Tests
+
+```bash
+python tests/test_smoke.py
+```
+
+Stubs the optional engines, so it passes without Tesseract or
+LibreOffice installed.
+
 **Build standalone `.exe`:**
 ```bash
 pyinstaller app.spec
 ```
+
+To bundle the engines into the executable, drop a portable Tesseract in
+`tesseract/` and a portable LibreOffice in `libreoffice/` before
+building, then add them to `datas` in `app.spec`. Both folders are
+gitignored.
 
 ---
 
