@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, jsonify, send_from_directory
+from flask import Flask, render_template, request, send_file, jsonify
 import os
 import uuid
 import pandas as pd
@@ -8,13 +8,13 @@ import tempfile
 import webbrowser
 import pytesseract
 from PIL import Image
-import cv2
-import numpy as np
+import shutil
 import subprocess
 import threading
 import time
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
 
 # ================= UPLOAD FOLDER =================
 def get_upload_folder():
@@ -27,21 +27,32 @@ def get_upload_folder():
 
 UPLOAD_FOLDER = get_upload_folder()
 
+HOST = os.environ.get("HOST", "127.0.0.1")
+PORT = int(os.environ.get("PORT", 5000))
+
 # ================= LIBREOFFICE =================
 def get_soffice_path():
     if getattr(sys, 'frozen', False):
-        base = sys._MEIPASS
-    else:
-        base = os.getcwd()
+        bundled = os.path.join(sys._MEIPASS, "libreoffice", "program", "soffice.exe")
+        if os.path.exists(bundled):
+            return bundled
 
-    return os.path.join(
-        base,
-        "libreoffice",
-        "App",
-        "libreoffice",
-        "program",
-        "soffice.exe"
-    )
+    on_path = shutil.which("soffice") or shutil.which("soffice.exe")
+    if on_path:
+        return on_path
+
+    candidates = [
+        r"C:\Program Files\LibreOffice\program\soffice.exe",
+        r"C:\Program Files (x86)\LibreOffice\program\soffice.exe",
+        "/Applications/LibreOffice.app/Contents/MacOS/soffice",
+        "/usr/bin/soffice",
+        "/usr/local/bin/soffice",
+        "/snap/bin/libreoffice",
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
 
 # ================= TESSERACT =================
 def get_tesseract_path():
@@ -49,7 +60,6 @@ def get_tesseract_path():
     if getattr(sys, 'frozen', False):
         return os.path.join(sys._MEIPASS, "tesseract", "tesseract.exe")
     # Check PATH first (works on Mac/Linux after brew/apt install)
-    import shutil
     path_result = shutil.which("tesseract")
     if path_result:
         return path_result
@@ -66,60 +76,40 @@ def get_tesseract_path():
 pytesseract.pytesseract.tesseract_cmd = get_tesseract_path()
 
 # ================= HOME =================
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    return render_template(
-        "index.html",
-        output="",
-        dedupe_output="",
-        risk_output="",
-        kpi_output="",
-        sheet_output="",
-        active_tab="text"
-    )
-
-# ================= KNOWLEDGE =================
-@app.route("/knowledge/<path:filename>")
-def serve_knowledge(filename):
-    return send_from_directory("knowledge", filename)
+    return render_template("index.html")
 
 # ================= IMAGE → TEXT =================
-@app.route("/image_to_text", methods=["GET", "POST"])
+@app.route("/image_to_text", methods=["POST"])
 def image_to_text():
-    if request.method == "GET":
-        return render_template(
-            "index.html",
-            ocr_output="",
-            active_tab="image_to_text"
-        )
-
+    img_path = None
     try:
         file = request.files.get("file")
         if not file:
-            return render_template(
-                "index.html",
-                ocr_output="No file uploaded",
-                active_tab="image_to_text"
-            )
+            return "No file uploaded", 400
 
         uid = str(uuid.uuid4())
         img_path = os.path.join(UPLOAD_FOLDER, f"{uid}.png")
         file.save(img_path)
 
-        text = pytesseract.image_to_string(Image.open(img_path))
+        with Image.open(img_path) as img:
+            text = pytesseract.image_to_string(img)
 
-        return render_template(
-            "index.html",
-            ocr_output=text,
-            active_tab="image_to_text"
-        )
+        return text.strip() or "No text found in image."
 
+    except pytesseract.TesseractNotFoundError:
+        return (
+            "Tesseract OCR is not installed or not on PATH.\n"
+            "Windows: https://github.com/UB-Mannheim/tesseract/wiki\n"
+            "macOS: brew install tesseract\n"
+            "Linux: apt install tesseract-ocr"
+        ), 500
     except Exception as e:
-        return render_template(
-            "index.html",
-            ocr_output=f"OCR failed: {e}",
-            active_tab="image_to_text"
-        )
+        return f"OCR failed: {e}", 500
+    finally:
+        if img_path and os.path.exists(img_path):
+            os.remove(img_path)
 
 # ================= DEDUPE =================
 @app.route("/dedupe", methods=["POST"])
@@ -222,8 +212,11 @@ def word_to_pdf():
         file.save(docx_path)
 
         soffice = get_soffice_path()
-        if soffice != "soffice" and not os.path.exists(soffice):
-            return jsonify({"error": "LibreOffice not found. Please install LibreOffice."}), 500
+        if not soffice:
+            return jsonify({
+                "error": "LibreOffice not found. Install it from "
+                         "https://www.libreoffice.org/download/ and retry."
+            }), 500
 
         subprocess.run(
             [
@@ -293,7 +286,7 @@ def convert_text_to_mermaid(text):
             generated = True
 
         elif line.startswith("-") and ":" in line and last_parent:
-            item, owner = line[1:].split(":")
+            item, owner = line[1:].split(":", 1)
             item = item.strip().replace(" ", "_")
             owner = owner.strip().replace(" ", "_")
             mermaid.append(f"{last_parent} --> {item}")
@@ -309,7 +302,7 @@ def convert_text_to_mermaid(text):
 if __name__ == "__main__":
     def open_browser():
         time.sleep(2)
-        webbrowser.open("http://127.0.0.1:5000")
+        webbrowser.open(f"http://{HOST}:{PORT}")
 
-    threading.Thread(target=open_browser).start()
-    app.run(host="127.0.0.1", port=5000)
+    threading.Thread(target=open_browser, daemon=True).start()
+    app.run(host=HOST, port=PORT)

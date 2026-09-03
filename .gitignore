@@ -4,6 +4,7 @@ uploads/
 libreoffice/
 # Tesseract binaries
 tesseract/
+doc/
 # Build output
 build/
 dist/
