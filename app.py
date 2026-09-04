@@ -80,6 +80,20 @@ pytesseract.pytesseract.tesseract_cmd = get_tesseract_path()
 def index():
     return render_template("index.html")
 
+# ================= CAPABILITIES =================
+def tesseract_available():
+    path = get_tesseract_path()
+    return bool(shutil.which(path) or os.path.exists(path))
+
+
+@app.route("/capabilities")
+def capabilities():
+    """Which optional engines are present, so the UI can say so upfront."""
+    return jsonify({
+        "tesseract": tesseract_available(),
+        "libreoffice": get_soffice_path() is not None,
+    })
+
 # ================= IMAGE → TEXT =================
 @app.route("/image_to_text", methods=["POST"])
 def image_to_text():

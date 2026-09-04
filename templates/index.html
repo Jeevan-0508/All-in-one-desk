@@ -2515,6 +2515,57 @@ async function loadSelectedChapter(){
 }
 </script>
 
+<!--- optional engine check: warn once instead of failing silently -->
+<script>
+(async () => {
+  let caps;
+  try {
+    caps = await (await fetch("/capabilities")).json();
+  } catch (e) {
+    return;
+  }
+
+  const missing = [];
+  if (!caps.tesseract) missing.push({
+    name: "Tesseract OCR",
+    needed: "Image \u2192 Text",
+    url: "https://github.com/UB-Mannheim/tesseract/wiki"
+  });
+  if (!caps.libreoffice) missing.push({
+    name: "LibreOffice",
+    needed: "Word \u2192 PDF",
+    url: "https://www.libreoffice.org/download/"
+  });
+  if (!missing.length || sessionStorage.getItem("hideEngineNotice")) return;
+
+  const bar = document.createElement("div");
+  bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:9999;" +
+    "background:#2d2a1f;color:#f5e6a8;border-top:1px solid #6b5f2a;" +
+    "padding:10px 16px;font:13px/1.5 system-ui,sans-serif;display:flex;" +
+    "gap:12px;align-items:center;justify-content:center;flex-wrap:wrap";
+
+  const text = document.createElement("span");
+  text.innerHTML = "Optional engines not found \u2014 " +
+    missing.map(m =>
+      m.needed + " needs <a href=\"" + m.url + "\" target=\"_blank\" " +
+      "rel=\"noopener\" style=\"color:#ffd966\">" + m.name + "</a>"
+    ).join(" &middot; ") +
+    ". Every other tool works.";
+  bar.appendChild(text);
+
+  const close = document.createElement("button");
+  close.textContent = "Dismiss";
+  close.style.cssText = "background:#6b5f2a;color:#fff;border:0;" +
+    "border-radius:4px;padding:4px 12px;cursor:pointer;font:inherit";
+  close.onclick = () => {
+    sessionStorage.setItem("hideEngineNotice", "1");
+    bar.remove();
+  };
+  bar.appendChild(close);
+
+  document.body.appendChild(bar);
+})();
+</script>
 
 </body>
 </html>

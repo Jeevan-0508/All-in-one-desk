@@ -1,0 +1,55 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-exe:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable
+        run: pyinstaller app.spec
+
+      - name: Package
+        run: |
+          Copy-Item README.md dist/app/
+          Copy-Item LICENSE dist/app/
+          Rename-Item dist/app "All-in-One-Desk"
+          Compress-Archive -Path dist/All-in-One-Desk -DestinationPath All-in-One-Desk-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: All-in-One-Desk-windows
+          path: All-in-One-Desk-windows.zip
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: All-in-One-Desk-windows.zip
+          body: |
+            Download `All-in-One-Desk-windows.zip`, unzip it anywhere and run `app.exe`.
+            No Python installation required.
+
+            Two tools call out to external engines and will show a notice if they are absent:
+
+            - **Image -> Text (OCR)** needs [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
+            - **Word -> PDF** needs [LibreOffice](https://www.libreoffice.org/download/)
+
+            Every other tool works with no extra installation.

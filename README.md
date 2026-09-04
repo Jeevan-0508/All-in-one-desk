@@ -175,41 +175,57 @@ flowchart LR
 
 ## 🚀 Getting Started
 
-### Prerequisites
+Pick whichever suits you. Option 1 needs nothing installed at all.
 
-Most tools are pure Python, but two features call out to external engines.
-Install these first or those two tabs will report an error:
+### Option 1 — Download the app (no Python needed)
 
-| Feature | Needs | Windows | macOS | Linux |
-|:---|:---|:---|:---|:---|
-| Image → Text (OCR) | Tesseract | [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) | `brew install tesseract` | `apt install tesseract-ocr` |
-| Word → PDF | LibreOffice | [libreoffice.org](https://www.libreoffice.org/download/) | `brew install --cask libreoffice` | `apt install libreoffice` |
+Grab `All-in-One-Desk-windows.zip` from the
+[latest release](https://github.com/Jeevan-0508/All-in-one-desk/releases/latest),
+unzip it anywhere, and run **`app.exe`**. That is the whole process.
 
-Both are located automatically via `PATH` or their standard install
-directories — no configuration needed.
-
-Everything else (text tools, diff, dedupe, KPI, notes, dashboard,
-flowcharts, email templates, knowledge assistant) runs with no extra
-dependencies.
-
-### Run it
+### Option 2 — Run from source, one double-click
 
 ```bash
 git clone https://github.com/Jeevan-0508/All-in-one-desk.git
 cd All-in-one-desk
-python -m venv buildenv
-buildenv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-# Open http://localhost:5000
 ```
 
-The browser opens automatically. To use a different port — port 5000 is
-taken by AirPlay on macOS:
+Then double-click **`run.bat`** (Windows) or run **`./run.sh`** (macOS / Linux).
+
+The first run builds a virtual environment and installs the dependencies,
+which takes about a minute. Every run after that starts immediately and
+opens your browser at <http://localhost:5000>. You need Python 3.9+ on
+your machine; the script tells you where to get it if it is missing.
+
+### Option 3 — Manual setup
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate        # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+Port 5000 is taken by AirPlay on macOS, so override it if needed:
 
 ```bash
 PORT=8000 python app.py
 ```
+
+### Optional engines
+
+Two of the fifteen tools shell out to an external engine. The app shows a
+notice at the bottom of the window if either is absent, and everything
+else keeps working:
+
+| Tool | Needs | Windows | macOS | Linux |
+|:---|:---|:---|:---|:---|
+| Image → Text (OCR) | Tesseract | [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) | `brew install tesseract` | `apt install tesseract-ocr` |
+| Word → PDF | LibreOffice | [libreoffice.org](https://www.libreoffice.org/download/) | `brew install --cask libreoffice` | `apt install libreoffice` |
+
+Both are found automatically via `PATH` or their standard install
+directories — no configuration. Check what the app detected at
+<http://localhost:5000/capabilities>.
 
 ### Tests
 
@@ -220,17 +236,18 @@ python tests/test_smoke.py
 Stubs the optional engines, so it passes without Tesseract or
 LibreOffice installed.
 
-**Build standalone `.exe`:**
+### Building the executable yourself
+
 ```bash
+pip install pyinstaller
 pyinstaller app.spec
 ```
 
-To bundle the engines into the executable, drop a portable Tesseract in
-`tesseract/` and a portable LibreOffice in `libreoffice/` before
-building, then add them to `datas` in `app.spec`. Both folders are
-gitignored.
+Output lands in `dist/app/`. To bundle the engines into the executable,
+drop a portable Tesseract in `tesseract/` and a portable LibreOffice in
+`libreoffice/` first, then add them to `datas` in `app.spec`. Both
+folders are gitignored.
 
----
 
 ## 🎨 Themes
 
