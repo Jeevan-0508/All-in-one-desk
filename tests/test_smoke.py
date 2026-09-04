@@ -127,6 +127,13 @@ def main():
     diagram = response.get_json().get("diagram", "")
     check("flowchart builds edges", "Start --> Review" in diagram, diagram)
 
+    # pandas needs openpyxl for .xlsx and xlrd for legacy .xls. pandas is
+    # stubbed here, so assert the declaration instead of the import.
+    with io.open(os.path.join(ROOT, "requirements.txt"), encoding="utf-8") as fh:
+        declared = fh.read()
+    check("requirements declares openpyxl", "openpyxl" in declared, declared)
+    check("requirements declares xlrd", "xlrd" in declared, declared)
+
     application.shutil.which = lambda name: None
     application.os.path.exists = lambda path: False
     check("soffice lookup returns None when absent",

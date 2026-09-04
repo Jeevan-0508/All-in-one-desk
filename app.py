@@ -272,7 +272,8 @@ def sheet_to_text():
     try:
         file = request.files["file"]
 
-        if file.filename.lower().endswith(".csv"):
+        name = (file.filename or "").lower()
+        if name.endswith(".csv") or name.endswith(".txt"):
             df = pd.read_csv(file, dtype=str)
         else:
             df = pd.read_excel(file, dtype=str)
@@ -281,6 +282,11 @@ def sheet_to_text():
         lines = [" ".join(row.astype(str)) for _, row in df.iterrows()]
         return "\n".join(lines)
 
+    except ImportError as e:
+        return (
+            f"A spreadsheet reader is missing ({e}).\n"
+            "Run: pip install -r requirements.txt"
+        ), 500
     except Exception as e:
         return f"Sheet conversion failed: {e}", 400
 

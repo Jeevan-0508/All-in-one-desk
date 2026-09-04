@@ -11,11 +11,20 @@ else
     exit 1
 fi
 
+setup=""
 if [ ! -x ".venv/bin/python" ]; then
+    setup=1
     echo "First run - setting up. This takes a minute, only happens once."
     "$PY" -m venv .venv
+elif ! cmp -s requirements.txt .venv/requirements.stamp; then
+    setup=1
+    echo "Dependencies changed - updating."
+fi
+
+if [ -n "$setup" ]; then
     .venv/bin/python -m pip install --upgrade pip --quiet
     .venv/bin/python -m pip install -r requirements.txt --quiet
+    cp requirements.txt .venv/requirements.stamp
     echo "Setup complete."
 fi
 

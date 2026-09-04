@@ -15,13 +15,26 @@ if not defined PY (
     exit /b 1
 )
 
-if not exist ".venv\Scripts\python.exe" (
-    echo First run - setting up. This takes a minute, only happens once.
-    %PY% -m venv .venv
-    if errorlevel 1 goto failed
+set "SETUP="
+if not exist ".venv\Scripts\python.exe" set "SETUP=1"
+if not defined SETUP (
+    fc /b requirements.txt ".venv\requirements.stamp" >nul 2>&1
+    if errorlevel 1 (
+        set "SETUP=1"
+        echo Dependencies changed - updating.
+    )
+)
+
+if defined SETUP (
+    if not exist ".venv\Scripts\python.exe" (
+        echo First run - setting up. This takes a minute, only happens once.
+        %PY% -m venv .venv
+        if errorlevel 1 goto failed
+    )
     ".venv\Scripts\python.exe" -m pip install --upgrade pip --quiet
     ".venv\Scripts\python.exe" -m pip install -r requirements.txt --quiet
     if errorlevel 1 goto failed
+    copy /y requirements.txt ".venv\requirements.stamp" >nul
     echo Setup complete.
 )
 
