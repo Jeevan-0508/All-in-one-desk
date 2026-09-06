@@ -291,7 +291,7 @@ folders are gitignored.
 
 <div align="center">
 
-**Built by [Jeevan Kumar](https://github.com/Jeevan-0508)**
+**Built by [Jeevan Siddhabhaktula](https://github.com/Jeevan-0508)**
 
 *Work smarter, not harder — and keep your data safe while doing it.*
 
