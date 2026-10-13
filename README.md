@@ -29,6 +29,8 @@
 
 ---
 
+<p align="center"><a href="docs/getting-started.md">Getting started</a> · <a href="docs/quality-review.md">Quality review</a></p>
+
 ## 🎯 What Is This?
 
 **All-in-One Desk** is a self-contained desktop productivity application that packages **15+ professional tools** into a single offline interface — no subscriptions, no cloud uploads, no data leaks.
